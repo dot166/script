@@ -1,0 +1,153 @@
+#!/bin/bash
+
+set -o errexit -o nounset -o pipefail
+
+source "$(dirname ${BASH_SOURCE[0]})/common"
+source "$(dirname ${BASH_SOURCE[0]})/../common.sh"
+
+[[ $# -eq 0 ]] && user_error "expected action as argument"
+readonly action=$1
+
+if [[ $action == @(push|fetch|update|default|init) ]]; then
+    [[ $# -ne 1 ]] && user_error "expected no arguments for $action"
+elif [[ $action == @(release|delete) ]]; then
+    readonly tag_name=$2
+    [[ $# -ne 2 ]] && user_error "expected tag name as argument for $action"
+else
+    user_error "unrecognized action"
+fi
+
+readonly aosp_forks=(
+)
+
+readonly grapheneos_forks=(
+    platform_bootable_recovery
+    platform_build
+    jOS_manifest
+    platform_packages_apps_Launcher3
+    platform_packages_apps_Settings
+    platform_packages_inputmethods_LatinIME
+    platform_packages_apps_SetupWizard2
+    platform_packages_apps_Updater
+    script
+)
+
+readonly independent=(
+    jOS_j-lib
+    jOS-System
+    jOS_ThemeEngine
+    jOS_vendor_j
+    jOS-Updates
+)
+
+for repo in "${aosp_forks[@]}"; do
+    echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
+
+    cd $repo
+    git checkout $j_branch
+
+    if [[ $action == delete ]]; then
+        git tag -d $tag_name || true
+        git push origin --delete $tag_name || true
+    elif [[ $action == release ]]; then
+        git tag -s $tag_name -m $tag_name
+        git push origin $tag_name
+    elif [[ $action == update ]]; then
+        git fetch upstream --tags
+        git rebase --onto $aosp_tag $aosp_tag_old
+        git push -f
+    elif [[ $action == push ]]; then
+        git push
+    elif [[ $action == fetch ]]; then
+        git fetch upstream --tags
+    elif [[ $action == default ]]; then
+        gh repo edit dot166/$repo --default-branch $j_branch
+    elif [[ $action == init ]]; then
+        git clone https://github.com/dot166/$repo -b $j_branch
+        git remote add upstream https://android.googlesource.com/${repo//_/\/}
+        git fetch upstream --tags
+    fi
+
+    cd ..
+done
+
+for repo in ${grapheneos_forks[@]}; do
+    echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
+
+    cd $repo
+    git checkout $j_branch
+
+    if [[ $action == delete ]]; then
+        git tag -d $tag_name || true
+        git push origin --delete $tag_name || true
+    elif [[ $action == release ]]; then
+        if [[ $repo == jOS_manifest ]]; then
+            git checkout -B tmp
+            sed -i s%refs/heads/$j_branch%refs/tags/$tag_name% default.xml
+            git commit default.xml -m $tag_name
+            git push -fu origin tmp
+        else
+            git tag -s $tag_name -m $tag_name
+            git push origin $tag_name
+        fi
+    elif [[ $action == update ]]; then
+        git fetch upstream --tags
+        if [[ $repo == jOS_manifest ]]; then
+            git rebase --onto $graphene_tag~1 $graphene_tag_old~1
+        else
+            git rebase --onto $graphene_tag $graphene_tag_old
+        fi
+        git push -f
+    elif [[ $action == push ]]; then
+        git push
+    elif [[ $action == fetch ]]; then
+        git fetch upstream --tags
+    elif [[ $action == default ]]; then
+        gh repo edit dot166/$repo --default-branch $j_branch
+    elif [[ $action == init ]]; then
+        git clone https://github.com/dot166/$repo -b $j_branch
+        if [[ $repo == jOS_manifest ]]; then
+            git remote add upstream https://github.com/grapheneos/platform_manifest
+        else
+            git remote add upstream https://github.com/grapheneos/$repo
+        fi
+        git fetch upstream --tags
+    fi
+
+    cd ..
+done
+
+for repo in ${independent[@]}; do
+    echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
+
+    cd $repo
+    if [[ $repo != jOS-Updates && $repo != jOS-System && $repo != jOS_j-lib ]] then
+        git checkout $j_branch
+    else
+        git checkout main
+    fi
+
+    if [[ $action == delete ]]; then
+        git tag -d $tag_name || true
+        git push origin --delete $tag_name || true
+    elif [[ $action == release ]]; then
+        if [[ $repo == jOS-Updates ]]; then
+            cp -T ../../jOS-15.1/releases/$tag_name/release-oriole-$tag_name/oriole-stable oriole-stable
+            gh release create $tag_name -F release-notes.md ../../jOS-15.1/releases/$tag_name/release-oriole-$tag_name/oriole-ota_update-$tag_name.zip ../../jOS-15.1/releases/$tag_name/release-oriole-$tag_name/oriole-install-$tag_name.zip
+            git push
+        else
+            git tag -s $tag_name -m $tag_name
+            git push origin $tag_name
+        fi
+    elif [[ $action == push ]]; then
+        git push
+    elif [[ $action == default ]]; then
+        if [[ $repo != jOS-Updates && $repo != jOS-System && $repo != jOS_j-lib ]] then
+            gh repo edit dot166/$repo --default-branch $j_branch
+        fi
+    elif [[ $action == init ]]; then
+        git clone https://github.com/dot166/$repo -b $j_branch
+    fi
+
+    cd ..
+done
