@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Common script utilities
+source $(cd $(dirname $BASH_SOURCE) &> /dev/null && pwd)/../../build/make/shell_utils.sh
+
+require_top
+
+cd $TOP
+source build/envsetup.sh
+
+lunch sdk_phone64_x86_64-cur-$1 && \
+sudo rm -rf out && \
+m && \
+emulator
