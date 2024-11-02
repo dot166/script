@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -o errexit -o nounset -o pipefail
+
+source "$(dirname ${BASH_SOURCE[0]})/../common.sh"
+source "$(dirname ${BASH_SOURCE[0]})/common"
+
+if [[ $# -ne 1 ]]; then
+    user_error "expected 1 argument"
+fi
+
+repo=${1%/}
+
+upstream="https://github.com/GrapheneOS/$repo"
+
+git clone $upstream -b $graphene_tag
+cd $repo
+git checkout -b $j_branch
+git remote add upstream $upstream
+git fetch upstream --tags
+git remote rm origin
+gh repo create --public --push --source . dot166/$repo -h https://dot166.github.io/jOS/ --disable-issues --disable-wiki
+gh repo set-default dot166/$repo
+gh repo edit --enable-projects=false --enable-merge-commit=false
+gh repo view --web
