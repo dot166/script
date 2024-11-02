@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Common script utilities
+source $(cd $(dirname $BASH_SOURCE) &> /dev/null && pwd)/../../build/make/shell_utils.sh
+
+require_top
+
+cd $TOP
+source build/envsetup.sh
+
+lunch $1-cur-$2 && \
+sudo rm -rf out && \
+m vendorbootimage target-files-package && \
+m otatools-package && \
+script/finalize.sh && \
+script/generate-release.sh $1 $BUILD_NUMBER

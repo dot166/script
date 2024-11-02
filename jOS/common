@@ -1,0 +1,4 @@
+readonly j_branch=jOS-15.1 # Deprecated. Will use Graphene Branch name after jOS 16 (android 16)
+readonly graphene_tag_old=2025022800
+readonly graphene_tag=2025030100
+readonly cm_latest_branch=lineage-22.1
