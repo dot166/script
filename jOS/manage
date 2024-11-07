@@ -45,6 +45,7 @@ for repo in "${aosp_forks[@]}"; do
 
     cd $repo
     git checkout $j_branch
+    git pull
 
     if [[ $action == delete ]]; then
         git tag -d $tag_name || true
@@ -76,6 +77,7 @@ for repo in ${grapheneos_forks[@]}; do
 
     cd $repo
     git checkout $j_branch
+    git pull
 
     if [[ $action == delete ]]; then
         git tag -d $tag_name || true
@@ -126,6 +128,7 @@ for repo in ${independent[@]}; do
     else
         git checkout main
     fi
+    git pull
 
     if [[ $action == delete ]]; then
         git tag -d $tag_name || true
