@@ -96,8 +96,12 @@ for repo in ${grapheneos_forks[@]}; do
         git fetch upstream --tags
         if [[ $repo == jOS_manifest ]]; then
             git rebase -i --onto $graphene_tag~1 $graphene_tag_old~1
-            sed -i s%refs/heads/$branch%refs/tags/$graphene_tag% default.xml
-            git commit default.xml -m "GrapheneOS $graphene_tag"
+            sed -i s%refs/tags/$graphene_tag_old%refs/tags/$graphene_tag% default.xml
+            CHANGES=0 && git diff --quiet || CHANGES=1
+            echo "CHANGES=$CHANGES"
+            if [[ CHANGES -eq 1 ]]; then
+                git commit default.xml -m "GrapheneOS $graphene_tag"
+            fi
         else
             git rebase --onto $graphene_tag $graphene_tag_old
         fi
