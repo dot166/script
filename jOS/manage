@@ -159,13 +159,15 @@ for repo in ${independent[@]}; do
                     git push
                 fi
             fi
-            git tag -s $tag_name -m $tag_name
-            git push origin $tag_name
+            if [[ $repo != jOS_j-lib ]] then
+                git tag -s $tag_name -m $tag_name
+                git push origin $tag_name
+            fi
         fi
     elif [[ $action == push ]]; then
         git push
     elif [[ $action == default ]]; then
-        if [[ $repo != jOS-Updates && $repo != jOS-System && $repo != jOS_j-lib ]] then
+        if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
             gh repo edit dot166/$repo --default-branch $j_branch
         fi
     elif [[ $action == init ]]; then
