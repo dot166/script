@@ -129,7 +129,7 @@ for repo in ${independent[@]}; do
     echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
 
     cd $repo
-    if [[ $repo != jOS-Updates && $repo != jOS-System && $repo != jOS_j-lib ]] then
+    if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
         git checkout $j_branch
     else
         git checkout main
