@@ -128,6 +128,7 @@ readonly kernels=(
     kernel_google-modules_amplifiers-zumapro
     kernel_google-modules_bms-zumapro
     kernel_google-modules_edgetpu_rio
+    kernel_google-modules_gpu-zumapro
     kernel_google-modules_gxp_zuma
     kernel_google-modules_power_reset-zumapro
     kernel_google-modules_soc_gs-zumapro
@@ -161,6 +162,7 @@ declare -Ar kernel_tags_old=(
     [kernel_google-modules_amplifiers-zumapro]=android-15.0.0_r0.39
     [kernel_google-modules_bms-zumapro]=android-15.0.0_r0.39
     [kernel_google-modules_edgetpu_rio]=android-15.0.0_r0.39
+    [kernel_google-modules_gpu-zumapro]=android-15-qpr2-beta-1_r0.9
     [kernel_google-modules_gxp_zuma]=android-15.0.0_r0.39
     [kernel_google-modules_power_reset-zumapro]=android-15.0.0_r0.39
     [kernel_google-modules_soc_gs-zumapro]=android-15.0.0_r0.39
@@ -195,6 +197,7 @@ declare -Ar kernel_tags=(
     [kernel_google-modules_amplifiers-zumapro]=android-15.0.0_r0.39
     [kernel_google-modules_bms-zumapro]=android-15.0.0_r0.39
     [kernel_google-modules_edgetpu_rio]=android-15.0.0_r0.39
+    [kernel_google-modules_gpu-zumapro]=android-15-qpr2-beta-1_r0.9
     [kernel_google-modules_gxp_zuma]=android-15.0.0_r0.39
     [kernel_google-modules_power_reset-zumapro]=android-15.0.0_r0.39
     [kernel_google-modules_soc_gs-zumapro]=android-15.0.0_r0.39
