@@ -149,16 +149,6 @@ for repo in ${independent[@]}; do
             git push
             gh release create $tag_name --latest=true --notes "please see https://dot166.github.io/$tag_name-changelog.html for the changelog" ../../jOS-15.1/releases/$tag_name/release-oriole-$tag_name/oriole-ota_update-$tag_name.zip ../../jOS-15.1/releases/$tag_name/release-oriole-$tag_name/oriole-install-$tag_name.zip
         else
-            if [[ $repo == jOS_j-lib ]]; then
-                cp -T ../../jOS-15.1/out/soong/.intermediates/j-sdk/PrivExt/j.Lib.PrivExt/android_common/**/javac/j.Lib.PrivExt.jar j-LIB-core/lib/javalib.jar
-                CHANGES=0 && git diff --quiet || CHANGES=1
-                echo "CHANGES=$CHANGES"
-                if [[ CHANGES -eq 1 ]]; then
-                    git add .
-                    git commit -m "Update PrivExt to $tag_name"
-                    git push
-                fi
-            fi
             if [[ $repo != jOS_j-lib ]] then
                 git tag -s $tag_name -m $tag_name
                 git push origin $tag_name
