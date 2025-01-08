@@ -138,16 +138,16 @@ readonly kernels=(
 )
 
 declare -Ar kernel_tags_old=(
-    # December 2024
-    [kernel_build-gs]=android-15.0.0_r0.35
-    [kernel_devices_google_tangorpro]=android-15.0.0_r0.35
-    [kernel_gs]=android-15.0.0_r0.35
-    [kernel_google-modules_amplifiers-gs]=android-15.0.0_r0.35
-    [kernel_google-modules_power_reset-gs]=android-15.0.0_r0.35
-    [kernel_google-modules_wlan_bcmdhd_bcm4389]=android-15.0.0_r0.35
-    [kernel_google-modules_wlan_syna_dhd43752p]=android-15.0.0_r0.35
+    # January 2024
+    [kernel_build-gs]=android-15.0.0_r0.42
+    [kernel_devices_google_tangorpro]=android-15.0.0_r0.42
+    [kernel_gs]=android-15.0.0_r0.42
+    [kernel_google-modules_amplifiers-gs]=android-15.0.0_r0.42
+    [kernel_google-modules_power_reset-gs]=android-15.0.0_r0.42
+    [kernel_google-modules_wlan_bcmdhd_bcm4389]=android-15.0.0_r0.42
+    [kernel_google-modules_wlan_syna_dhd43752p]=android-15.0.0_r0.42
 
-    # December 2024
+    # January 2024 (no changes from December 2024 tag)
     [kernel_build-zuma]=android-15.0.0_r0.37
     [kernel_devices_google_akita]=android-15.0.0_r0.37
     [kernel_devices_google_shusky]=android-15.0.0_r0.37
@@ -157,31 +157,31 @@ declare -Ar kernel_tags_old=(
     [kernel_google-modules_wlan_bcmdhd_bcm4383]=android-15.0.0_r0.37
     [kernel_google-modules_wlan_bcmdhd_bcm4398]=android-15.0.0_r0.37
 
-    # December 2024
-    [kernel_build-zumapro]=android-15.0.0_r0.39
-    [kernel_devices_google_caimito]=android-15.0.0_r0.39
-    [kernel_devices_google_comet]=android-15.0.0_r0.39
-    [kernel_google-modules_amplifiers-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_bms-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_edgetpu_rio]=android-15.0.0_r0.39
+    # January 2024
+    [kernel_build-zumapro]=android-15.0.0_r0.48
+    [kernel_devices_google_caimito]=android-15.0.0_r0.48
+    [kernel_devices_google_comet]=android-15.0.0_r0.48
+    [kernel_google-modules_amplifiers-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_bms-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_edgetpu_rio]=android-15.0.0_r0.48
     [kernel_google-modules_gpu-zumapro]=android-15-qpr2-beta-1_r0.9
-    [kernel_google-modules_gxp_zuma]=android-15.0.0_r0.39
-    [kernel_google-modules_power_reset-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_soc_gs-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_wlan_bcmdhd_bcm4390]=android-15.0.0_r0.39
+    [kernel_google-modules_gxp_zuma]=android-15.0.0_r0.48
+    [kernel_google-modules_power_reset-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_soc_gs-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_wlan_bcmdhd_bcm4390]=android-15.0.0_r0.48
 )
 
 declare -Ar kernel_tags=(
-    # December 2024
-    [kernel_build-gs]=android-15.0.0_r0.35
-    [kernel_devices_google_tangorpro]=android-15.0.0_r0.35
-    [kernel_gs]=android-15.0.0_r0.35
-    [kernel_google-modules_amplifiers-gs]=android-15.0.0_r0.35
-    [kernel_google-modules_power_reset-gs]=android-15.0.0_r0.35
-    [kernel_google-modules_wlan_bcmdhd_bcm4389]=android-15.0.0_r0.35
-    [kernel_google-modules_wlan_syna_dhd43752p]=android-15.0.0_r0.35
+    # January 2024
+    [kernel_build-gs]=android-15.0.0_r0.42
+    [kernel_devices_google_tangorpro]=android-15.0.0_r0.42
+    [kernel_gs]=android-15.0.0_r0.42
+    [kernel_google-modules_amplifiers-gs]=android-15.0.0_r0.42
+    [kernel_google-modules_power_reset-gs]=android-15.0.0_r0.42
+    [kernel_google-modules_wlan_bcmdhd_bcm4389]=android-15.0.0_r0.42
+    [kernel_google-modules_wlan_syna_dhd43752p]=android-15.0.0_r0.42
 
-    # December 2024
+    # January 2024 (no changes from December 2024 tag)
     [kernel_build-zuma]=android-15.0.0_r0.37
     [kernel_devices_google_akita]=android-15.0.0_r0.37
     [kernel_devices_google_shusky]=android-15.0.0_r0.37
@@ -192,18 +192,18 @@ declare -Ar kernel_tags=(
     [kernel_google-modules_wlan_bcmdhd_bcm4383]=android-15.0.0_r0.37
     [kernel_google-modules_wlan_bcmdhd_bcm4398]=android-15.0.0_r0.37
 
-    # December 2024
-    [kernel_build-zumapro]=android-15.0.0_r0.39
-    [kernel_devices_google_caimito]=android-15.0.0_r0.39
-    [kernel_devices_google_comet]=android-15.0.0_r0.39
-    [kernel_google-modules_amplifiers-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_bms-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_edgetpu_rio]=android-15.0.0_r0.39
+    # January 2024
+    [kernel_build-zumapro]=android-15.0.0_r0.48
+    [kernel_devices_google_caimito]=android-15.0.0_r0.48
+    [kernel_devices_google_comet]=android-15.0.0_r0.48
+    [kernel_google-modules_amplifiers-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_bms-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_edgetpu_rio]=android-15.0.0_r0.48
     [kernel_google-modules_gpu-zumapro]=android-15-qpr2-beta-1_r0.9
-    [kernel_google-modules_gxp_zuma]=android-15.0.0_r0.39
-    [kernel_google-modules_power_reset-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_soc_gs-zumapro]=android-15.0.0_r0.39
-    [kernel_google-modules_wlan_bcmdhd_bcm4390]=android-15.0.0_r0.39
+    [kernel_google-modules_gxp_zuma]=android-15.0.0_r0.48
+    [kernel_google-modules_power_reset-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_soc_gs-zumapro]=android-15.0.0_r0.48
+    [kernel_google-modules_wlan_bcmdhd_bcm4390]=android-15.0.0_r0.48
 )
 
 readonly independent=(
