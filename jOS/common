@@ -1,3 +1,3 @@
 readonly j_branch=jOS-15.1 # Deprecated. Will use Graphene Branch name after jOS 16 (android 16)
-readonly graphene_tag_old=2024120700
-readonly graphene_tag=2024121200
+readonly graphene_tag_old=2024121200
+readonly graphene_tag=2025010700
