@@ -35,7 +35,6 @@ readonly grapheneos_forks=(
 readonly independent=(
     jOS_j-lib
     jOS-System
-    jOS_ThemeEngine
     jOS_vendor_j
     jOS-Updates
 )
