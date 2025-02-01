@@ -23,6 +23,7 @@ readonly aosp_forks=(
 readonly grapheneos_forks=(
     platform_bootable_recovery
     platform_build
+    platform_frameworks_base
     jOS_manifest
     platform_packages_apps_Launcher3
     platform_packages_apps_Settings
