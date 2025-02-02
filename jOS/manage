@@ -88,10 +88,9 @@ for repo in ${grapheneos_forks[@]}; do
             sed -i s%refs/heads/$j_branch%refs/tags/$tag_name% default.xml
             git commit default.xml -m $tag_name
             git push -fu origin tmp
-        else
-            git tag -s $tag_name -m $tag_name
-            git push origin $tag_name
-        fi
+	fi
+        git tag -s $tag_name -m $tag_name
+        git push origin $tag_name
     elif [[ $action == update ]]; then
         git fetch upstream --tags
         if [[ $repo == jOS_manifest ]]; then
