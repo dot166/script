@@ -136,7 +136,7 @@ readonly kernels=(
 )
 
 declare -Ar kernel_tags_old=(
-    # January 2024
+    # January 2025
     [kernel_build-gs]=android-15.0.0_r0.42
     [kernel_devices_google_tangorpro]=android-15.0.0_r0.42
     [kernel_gs]=android-15.0.0_r0.42
@@ -145,7 +145,7 @@ declare -Ar kernel_tags_old=(
     [kernel_google-modules_wlan_bcmdhd_bcm4389]=android-15.0.0_r0.42
     [kernel_google-modules_wlan_syna_dhd43752p]=android-15.0.0_r0.42
 
-    # January 2024 (no changes from December 2024 tag)
+    # January 2025 (no changes from December 2024 tag)
     [kernel_build-zuma]=android-15.0.0_r0.37
     [kernel_devices_google_akita]=android-15.0.0_r0.37
     [kernel_devices_google_shusky]=android-15.0.0_r0.37
@@ -155,7 +155,7 @@ declare -Ar kernel_tags_old=(
     [kernel_google-modules_wlan_bcmdhd_bcm4383]=android-15.0.0_r0.37
     [kernel_google-modules_wlan_bcmdhd_bcm4398]=android-15.0.0_r0.37
 
-    # January 2024
+    # January 2025
     [kernel_build-zumapro]=android-15.0.0_r0.48
     [kernel_devices_google_caimito]=android-15.0.0_r0.48
     [kernel_devices_google_comet]=android-15.0.0_r0.48
@@ -170,7 +170,7 @@ declare -Ar kernel_tags_old=(
 )
 
 declare -Ar kernel_tags=(
-    # January 2024
+    # January 2025
     [kernel_build-gs]=android-15.0.0_r0.42
     [kernel_devices_google_tangorpro]=android-15.0.0_r0.42
     [kernel_gs]=android-15.0.0_r0.42
@@ -179,7 +179,7 @@ declare -Ar kernel_tags=(
     [kernel_google-modules_wlan_bcmdhd_bcm4389]=android-15.0.0_r0.42
     [kernel_google-modules_wlan_syna_dhd43752p]=android-15.0.0_r0.42
 
-    # January 2024 (no changes from December 2024 tag)
+    # January 2025 (no changes from December 2024 tag)
     [kernel_build-zuma]=android-15.0.0_r0.37
     [kernel_devices_google_akita]=android-15.0.0_r0.37
     [kernel_devices_google_shusky]=android-15.0.0_r0.37
@@ -190,7 +190,7 @@ declare -Ar kernel_tags=(
     [kernel_google-modules_wlan_bcmdhd_bcm4383]=android-15.0.0_r0.37
     [kernel_google-modules_wlan_bcmdhd_bcm4398]=android-15.0.0_r0.37
 
-    # January 2024
+    # January 2025
     [kernel_build-zumapro]=android-15.0.0_r0.48
     [kernel_devices_google_caimito]=android-15.0.0_r0.48
     [kernel_devices_google_comet]=android-15.0.0_r0.48
