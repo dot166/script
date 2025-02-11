@@ -42,6 +42,10 @@ readonly independent=(
 for repo in "${aosp_forks[@]}"; do
     echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
 
+    if [[ $action == init ]]; then
+        git clone https://github.com/dot166/$repo
+    fi
+
     cd $repo
     git checkout $j_branch
     git pull
@@ -63,7 +67,6 @@ for repo in "${aosp_forks[@]}"; do
     elif [[ $action == default ]]; then
         gh repo edit dot166/$repo --default-branch $j_branch
     elif [[ $action == init ]]; then
-        git clone https://github.com/dot166/$repo -b $j_branch
         git remote add upstream https://android.googlesource.com/${repo//_/\/}
         git fetch upstream --tags
     fi
@@ -73,6 +76,10 @@ done
 
 for repo in ${grapheneos_forks[@]}; do
     echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
+
+    if [[ $action == init ]]; then
+        git clone https://github.com/dot166/$repo
+    fi
 
     cd $repo
     git checkout $j_branch
@@ -111,7 +118,6 @@ for repo in ${grapheneos_forks[@]}; do
     elif [[ $action == default ]]; then
         gh repo edit dot166/$repo --default-branch $j_branch
     elif [[ $action == init ]]; then
-        git clone https://github.com/dot166/$repo -b $j_branch
         if [[ $repo == jOS_manifest ]]; then
             git remote add upstream https://github.com/grapheneos/platform_manifest
         else
@@ -125,6 +131,10 @@ done
 
 for repo in ${independent[@]}; do
     echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
+
+    if [[ $action == init ]]; then
+        git clone https://github.com/dot166/$repo
+    fi
 
     cd $repo
     if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
@@ -158,8 +168,6 @@ for repo in ${independent[@]}; do
         if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
             gh repo edit dot166/$repo --default-branch $j_branch
         fi
-    elif [[ $action == init ]]; then
-        git clone https://github.com/dot166/$repo -b $j_branch
     fi
 
     cd ..
