@@ -25,6 +25,8 @@ readonly grapheneos_forks=(
     platform_build
     platform_frameworks_base
     jOS_manifest
+    
+    platform_packages_apps_Dialer
     platform_packages_apps_Launcher3
     platform_packages_apps_Settings
     platform_packages_inputmethods_LatinIME
