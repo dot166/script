@@ -71,7 +71,7 @@ for repo in "${aosp_forks[@]}"; do
     elif [[ $action == fetch ]]; then
         git fetch upstream --tags
     elif [[ $action == default ]]; then
-        gh repo edit dot166/$repo --default-branch $j_branch
+        gh repo edit dot166/$repo --default-branch $branch
     elif [[ $action == init ]]; then
         git remote add upstream https://android.googlesource.com/${repo//_/\/}
         git fetch upstream --tags
@@ -122,7 +122,7 @@ for repo in ${grapheneos_forks[@]}; do
     elif [[ $action == fetch ]]; then
         git fetch upstream --tags
     elif [[ $action == default ]]; then
-        gh repo edit dot166/$repo --default-branch $j_branch
+        gh repo edit dot166/$repo --default-branch $branch
     elif [[ $action == init ]]; then
         if [[ $repo == jOS_manifest ]]; then
             git remote add upstream https://github.com/grapheneos/platform_manifest
@@ -135,7 +135,7 @@ for repo in ${grapheneos_forks[@]}; do
     cd ..
 done
 
-for repo in "${aosp_forks[@]}"; do
+for repo in "${cyanogenmod_forks[@]}"; do
     echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
 
     if [[ $action == init ]]; then
@@ -164,7 +164,7 @@ for repo in "${aosp_forks[@]}"; do
     elif [[ $action == fetch ]]; then
         git fetch upstream --tags
     elif [[ $action == default ]]; then
-        gh repo edit dot166/$repo --default-branch $j_branch
+        gh repo edit dot166/$repo --default-branch $branch
     elif [[ $action == init ]]; then
         git remote add upstream https://github.com/LineageOS/${repo//platform/android}
         git fetch upstream
@@ -210,7 +210,7 @@ for repo in ${independent[@]}; do
         git push
     elif [[ $action == default ]]; then
         if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
-            gh repo edit dot166/$repo --default-branch $j_branch
+            gh repo edit dot166/$repo --default-branch $branch
         fi
     fi
 
