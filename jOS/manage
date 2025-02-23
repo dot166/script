@@ -35,6 +35,10 @@ readonly grapheneos_forks=(
     script
 )
 
+readonly cyanogenmod_forks=(
+    platform_packages_apps_Recorder
+)
+
 readonly independent=(
     jOS_j-lib
     jOS-System
@@ -126,6 +130,44 @@ for repo in ${grapheneos_forks[@]}; do
             git remote add upstream https://github.com/grapheneos/$repo
         fi
         git fetch upstream --tags
+    fi
+
+    cd ..
+done
+
+for repo in "${aosp_forks[@]}"; do
+    echo -e "\n>>> $(tput setaf 3)Handling $repo$(tput sgr0)"
+
+    if [[ $action == init ]]; then
+        git clone https://github.com/dot166/$repo
+    fi
+
+    cd $repo
+    git checkout $j_branch
+    git pull
+
+    if [[ $action == delete ]]; then
+        git tag -d $tag_name || true
+        git push origin --delete $tag_name || true
+    elif [[ $action == release ]]; then
+        git tag -s $tag_name -m $tag_name
+        git push origin $tag_name
+    elif [[ $action == update ]]; then
+        git fetch upstream
+        git rebase --onto upstream/$cm_latest_branch $(cat upstream-cm-commit)
+        rm upsteam-cm-commit
+        echo $(git rev-parse --verify upstream/$cm_latest_branch) > upsteam-cm-commit
+        git add . && git commit -m "update to a newer cm commit"
+        git push -f
+    elif [[ $action == push ]]; then
+        git push
+    elif [[ $action == fetch ]]; then
+        git fetch upstream --tags
+    elif [[ $action == default ]]; then
+        gh repo edit dot166/$repo --default-branch $j_branch
+    elif [[ $action == init ]]; then
+        git remote add upstream https://github.com/LineageOS/${repo//platform/android}
+        git fetch upstream
     fi
 
     cd ..
