@@ -57,7 +57,7 @@ for repo in "${aosp_forks[@]}"; do
     fi
 
     cd $repo
-    git checkout $j_branch
+    git checkout $branch
     git pull
 
     if [[ $action == delete ]]; then
@@ -92,7 +92,7 @@ for repo in ${grapheneos_forks[@]}; do
     fi
 
     cd $repo
-    git checkout $j_branch
+    git checkout $branch
     git pull
 
     if [[ $action == delete ]]; then
@@ -101,7 +101,7 @@ for repo in ${grapheneos_forks[@]}; do
     elif [[ $action == release ]]; then
         if [[ $repo == jOS_manifest ]]; then
             git checkout -B tmp
-            sed -i s%refs/heads/$j_branch%refs/tags/$tag_name% default.xml
+            sed -i s%refs/heads/$branch%refs/tags/$tag_name% default.xml
             git commit default.xml -m $tag_name
             git push -fu origin tmp
 	fi
@@ -147,7 +147,7 @@ for repo in "${cyanogenmod_forks[@]}"; do
     fi
 
     cd $repo
-    git checkout $j_branch
+    git checkout $branch
     git pull
 
     if [[ $action == delete ]]; then
@@ -186,7 +186,7 @@ for repo in ${independent[@]}; do
 
     cd $repo
     if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
-        git checkout $j_branch
+        git checkout $branch
     else
         git checkout main
     fi
@@ -197,13 +197,13 @@ for repo in ${independent[@]}; do
         git push origin --delete $tag_name || true
     elif [[ $action == release ]]; then
         if [[ $repo == jOS-Updates ]]; then
-            cp -T ../../$j_branch/releases/$tag_name/release-oriole-$tag_name/oriole-stable oriole-stable
-            cp -T ../../$j_branch/releases/$tag_name/release-oriole-$tag_name/oriole-beta oriole-beta
-            cp -T ../../$j_branch/releases/$tag_name/release-oriole-$tag_name/oriole-alpha oriole-alpha
+            cp -T ../../jOS/releases/$tag_name/release-oriole-$tag_name/oriole-stable oriole-stable
+            cp -T ../../jOS/releases/$tag_name/release-oriole-$tag_name/oriole-beta oriole-beta
+            cp -T ../../jOS/releases/$tag_name/release-oriole-$tag_name/oriole-alpha oriole-alpha
             git add .
             git commit -m "add new version information"
             git push
-            gh release create $tag_name --latest=true --notes "i keep forgetting to write changelogs" ../../$j_branch/releases/$tag_name/release-oriole-$tag_name/oriole-ota_update-$tag_name.zip ../../$j_branch/releases/$tag_name/release-oriole-$tag_name/oriole-install-$tag_name.zip
+            gh release create $tag_name --latest=true --notes "i keep forgetting to write changelogs" ../../jOS/releases/$tag_name/release-oriole-$tag_name/oriole-ota_update-$tag_name.zip ../../jOS/releases/$tag_name/release-oriole-$tag_name/oriole-install-$tag_name.zip
         else
             if [[ $repo != jOS_j-lib ]] then
                 git tag -s $tag_name -m $tag_name
