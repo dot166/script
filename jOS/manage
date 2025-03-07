@@ -60,9 +60,9 @@ for repo in "${aosp_forks[@]}"; do
     if [[ $action != bupdate ]]; then
         git checkout $branch
     else
-        git checkout 
+        git checkout origin
         git switch -c $branch
-        git push --force
+        git push --set-upstream origin $branch
     fi
     git pull
 
@@ -104,7 +104,7 @@ for repo in ${grapheneos_forks[@]}; do
         if [[ $repo != script ]]; then
             git checkout 
             git switch -c $branch
-            git push --force
+            git push --set-upstream origin $branch
         fi
     fi
     git pull
@@ -164,9 +164,9 @@ for repo in "${cyanogenmod_forks[@]}"; do
     if [[ $action != bupdate ]]; then
         git checkout $branch
     else
-        git checkout 
+        git checkout origin
         git switch -c $branch
-        git push --force
+        git push --set-upstream origin $branch
     fi
     git pull
 
@@ -205,16 +205,16 @@ for repo in ${independent[@]}; do
     fi
 
     cd $repo
-    if [[ $action != bupdate ]]; then
-        if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
+    if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
+        if [[ $action != bupdate ]]; then
             git checkout $branch
         else
-            git checkout main
+            git checkout origin
+            git switch -c $branch
+            git push --set-upstream origin $branch
         fi
     else
-        git checkout 
-        git switch -c $branch
-        git push --force
+        git checkout main
     fi
     git pull
 
