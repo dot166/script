@@ -10,7 +10,7 @@ readonly action=$1
 
 if [[ $action == @(push|fetch|update|default|init) ]]; then
     [[ $# -ne 1 ]] && user_error "expected no arguments for $action"
-elif [[ $action == @(release|delete) ]]; then
+elif [[ $action == @(release|delete|bupdate) ]]; then
     readonly tag_name=$2
     [[ $# -ne 2 ]] && user_error "expected tag name as argument for $action"
 else
@@ -57,7 +57,13 @@ for repo in "${aosp_forks[@]}"; do
     fi
 
     cd $repo
-    git checkout $branch
+    if [[ $action != bupdate ]]; then
+        git checkout $branch
+    else
+        git checkout 
+        git switch -c $branch
+        git push --force
+    fi
     git pull
 
     if [[ $action == delete ]]; then
@@ -92,7 +98,15 @@ for repo in ${grapheneos_forks[@]}; do
     fi
 
     cd $repo
-    git checkout $branch
+    if [[ $action != bupdate ]]; then
+        git checkout $branch
+    else
+        if [[ $repo != script ]]; then
+            git checkout 
+            git switch -c $branch
+            git push --force
+        fi
+    fi
     git pull
 
     if [[ $action == delete ]]; then
@@ -104,7 +118,7 @@ for repo in ${grapheneos_forks[@]}; do
             sed -i s%refs/heads/$branch%refs/tags/$tag_name% default.xml
             git commit default.xml -m $tag_name
             git push -fu origin tmp
-	fi
+	    fi
         git tag -s $tag_name -m $tag_name
         git push origin $tag_name
     elif [[ $action == update ]]; then
@@ -147,7 +161,13 @@ for repo in "${cyanogenmod_forks[@]}"; do
     fi
 
     cd $repo
-    git checkout $branch
+    if [[ $action != bupdate ]]; then
+        git checkout $branch
+    else
+        git checkout 
+        git switch -c $branch
+        git push --force
+    fi
     git pull
 
     if [[ $action == delete ]]; then
@@ -185,10 +205,16 @@ for repo in ${independent[@]}; do
     fi
 
     cd $repo
-    if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
-        git checkout $branch
+    if [[ $action != bupdate ]]; then
+        if [[ $repo != jOS-Updates && $repo != jOS_j-lib ]] then
+            git checkout $branch
+        else
+            git checkout main
+        fi
     else
-        git checkout main
+        git checkout 
+        git switch -c $branch
+        git push --force
     fi
     git pull
 
@@ -220,3 +246,7 @@ for repo in ${independent[@]}; do
 
     cd ..
 done
+if [[ $action == bupdate ]]; then
+    script/jOS/manage update
+    script/jOS/manage default
+fi
