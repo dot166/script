@@ -99,10 +99,10 @@ for repo in ${grapheneos_forks[@]}; do
 
     cd $repo
     if [[ $action != bupdate ]]; then
-        git checkout origin/$branch
+        git checkout $branch
     else
         if [[ $repo != script ]]; then
-            git checkout 
+            git checkout origin
             git switch -c $branch
             git push --set-upstream origin $branch
         fi
