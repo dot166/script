@@ -99,7 +99,7 @@ for repo in ${grapheneos_forks[@]}; do
 
     cd $repo
     if [[ $action != bupdate ]]; then
-        git checkout $branch
+        git checkout origin/$branch
     else
         if [[ $repo != script ]]; then
             git checkout 
