@@ -181,7 +181,11 @@ for repo in "${cyanogenmod_forks[@]}"; do
         git rebase --onto upstream/$cm_latest_branch $(cat upstream-cm-commit)
         rm upstream-cm-commit
         echo $(git rev-parse --verify upstream/$cm_latest_branch) > upstream-cm-commit
-        git add . && git commit -m "update to a newer cm commit"
+        CHANGES=0 && git diff --quiet || CHANGES=1
+        echo "CHANGES=$CHANGES"
+        if [[ CHANGES -eq 1 ]]; then
+            git add . && git commit -m "update to a newer cm commit"
+        fi
         git push -f
     elif [[ $action == push ]]; then
         git push
