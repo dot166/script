@@ -62,7 +62,7 @@ public class EmojiProcessor {
             File inputFile = targetPath.toFile();
             boolean useFallback = (!targetPath.toFile().exists() || contains(args, "-F"));
             if (useFallback) {
-                inputFile = Paths.get(absolutePath, "fallback.xml").toAbsolutePath().toFile();
+                inputFile = Paths.get(absolutePath, "../fallback.xml").toAbsolutePath().toFile();
             }
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
             String line;
