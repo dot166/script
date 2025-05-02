@@ -1,4 +1,0 @@
-#!/bin/bash
-
-cd "$(dirname $0)/emoji-script/legacy-java"
-java EmojiProcessor.java $@
