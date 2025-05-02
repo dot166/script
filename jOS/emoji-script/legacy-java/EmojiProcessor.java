@@ -19,6 +19,7 @@ import java.util.Objects;
 
 public class EmojiProcessor {
     public static void main(String[] args) {
+        System.out.println("WARNING! the java implementation of this program is deprecated. please use the rust version.")
         if (args.length < 1 || args.length > 3) {
             System.out.println("Usage: emoji [url|https://unicode.org/Public/emoji/16.0/emoji-test.txt] -F(Force fallback) -v(Verbose)");
             System.exit(1);
@@ -54,7 +55,7 @@ public class EmojiProcessor {
         }
 
         String absolutePath = new File("").getAbsolutePath();
-        String relativePath = "../../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml";
+        String relativePath = "../../../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml";
         Path targetPath = Paths.get(absolutePath, relativePath).toAbsolutePath();
 
         try {
@@ -108,7 +109,7 @@ public class EmojiProcessor {
             System.out.println("Done!");
 
             System.out.println("Updating fallback.xml");
-            BufferedWriter writer1 = new BufferedWriter(new FileWriter(Paths.get(absolutePath, "fallback.xml").toAbsolutePath().toFile()));
+            BufferedWriter writer1 = new BufferedWriter(new FileWriter(Paths.get(absolutePath, "../fallback.xml").toAbsolutePath().toFile()));
             writer1.write(content);
             writer1.close();
             System.out.println("Done!");

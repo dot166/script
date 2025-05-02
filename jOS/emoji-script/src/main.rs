@@ -1,100 +1,133 @@
+use regex::Regex;
+use reqwest::blocking::get;
 use std::collections::HashMap;
 use std::env;
+use std::error::Error;
 use std::fs::{self};
 use std::path::PathBuf;
 
-#[tokio::main]
-async fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
-    if args.len() < 2 || args.len() > 4 {
-        eprintln!("Usage: emoji [url|https://unicode.org/Public/emoji/16.0/emoji-test.txt] {{-F(Force fallback)}} {{-v(Verbose)}}");
+    if args.len() < 2 || args.len() > 3 {
+        eprintln!("Usage: {} [url|https://unicode.org/Public/emoji/16.0/emoji-test.txt] {{-v(Verbose)}}", args[0]);
         std::process::exit(1);
     }
 
-    let url = &args[1];
-    let force_fallback = args.contains(&"-F".to_string());
+    let emoji_url = &args[1];
     let verbose = args.contains(&"-v".to_string());
+    let emoji_data = get(emoji_url)?.text()?;
+    let mut emoji_by_group = parse_emoji_test_grouped(&emoji_data);
+    let group_to_array: HashMap<&str, &str> = HashMap::from([
+        ("Smileys & Emotion", "emoji_eight_smiley_people"),
+        ("Animals & Nature", "emoji_eight_animals_nature"),
+        ("Food & Drink", "emoji_eight_food_drink"),
+        ("Travel & Places", "emoji_eight_travel_places"),
+        ("Activities", "emoji_eight_activity"),
+        ("Objects", "emoji_eight_objects"),
+        ("Symbols", "emoji_eight_symbols"),
+        ("Flags", "emoji_eight_flags"),
+        ("Emoticons", "emoji_emoticons"),
+        ("Smileys & Emotion - boring", "emoji_eight_smiley_people_boring")
+    ]);
 
-    let response = match reqwest::get(url).await {
-        Ok(resp) => match resp.text().await {
-            Ok(text) => text,
-            Err(e) => {
-                eprintln!("Failed to read response: {}", e);
-                return;
-            }
-        },
-        Err(e) => {
-            eprintln!("Request error: {}", e);
-            return;
-        }
-    };
-
-    let mut group_name = String::new();
-    let mut items: HashMap<String, Vec<String>> = HashMap::new();
-
-    for line in response.lines() {
-        if let Some(subgroup) = line.strip_prefix("# subgroup: ") {
-            group_name = subgroup.trim().to_string();
-        } else if line.contains("; fully-qualified") && !line.contains("skin tone") {
-            if let Some((codepoints, _)) = line.split_once(";") {
-                let item = codepoints.trim().replace(' ', ",");
-                items.entry(group_name.clone()).or_default().push(item);
-            }
-        }
-    }
-
-    let current_dir = env::current_dir().expect("Could not get current dir");
-    println!("{:?}", current_dir);
-    let relative_path = PathBuf::from("../../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
-    let target_path = current_dir.join(&relative_path);
-    println!("{:?}", target_path);
-
-    let mut input_path = target_path.clone();
-    if !input_path.exists() || force_fallback {
-        input_path = current_dir.join("emoji-script/fallback.xml");
-    }
-
-    let content = fs::read_to_string(&input_path).expect("Could not read input file");
-
-    let mut updated_content = content.clone();
-
-    for (key, group_items) in &items {
-        let header = format!("<!-- {} -->", key);
-        if let Some(start) = updated_content.find(&header) {
-            let after_header = &updated_content[start..];
-            let end1 = after_header.find("</array>").map(|i| i + start);
-            let end2 = after_header.find("<!--").map(|i| i + start + 1);
-
-            let min_end = match (end1, end2) {
-                (Some(e1), Some(e2)) => e1.min(e2),
-                (Some(e1), None) => e1,
-                (None, Some(e2)) => e2,
-                (None, None) => continue,
-            };
-
-            let replace_section = updated_content[start..min_end].trim();
-            let mut built = format!("{}\n", header);
-            for item in group_items {
-                built.push_str(&format!("        <item>{}</item>\n", item));
-            }
-
-            updated_content = updated_content.replacen(replace_section, built.trim_end(), 1);
-        }
-    }
-
-    println!("Updating emoji-categories.xml in LatinIME");
+    // Step 2: Load fallback.xml
+    let exe = env::current_exe().unwrap();
+    let current_dir = exe.parent().expect("Could not get current dir");
     if verbose {
-        println!("{}", updated_content);
+        println!("{:?}", current_dir);
+    }
+    let relative_path = PathBuf::from("../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
+    let target_path = current_dir.join(&relative_path);
+    let fallback_path = current_dir.join("emoji-script/fallback.xml");
+    let fallback_content = fs::read_to_string(&fallback_path)?;
+    // inject emoticons into arrays
+    for line in fs::read_to_string(current_dir.join("emoji-script/emoticons"))?.lines() {
+        emoji_by_group.entry("Emoticons".parse().unwrap()).or_default().push(line.parse().unwrap());
     }
 
-    if target_path.exists() && force_fallback {
-        fs::remove_file(&target_path).ok();
+    // Step 3: Update fallback.xml content
+    let mut updated = fallback_content.clone();
+    for (group, items) in emoji_by_group {
+        if let Some(array_name) = group_to_array.get(group.as_str()) {
+            if verbose {
+                println!("{}", array_name);
+            }
+            updated = update_emoji_array(&updated, array_name, &items, verbose);
+        } else {
+            eprintln!("Skipping group '{}': no array name mapping.", group);
+        }
     }
 
-    fs::write(&target_path, &updated_content).expect("Failed to write updated emoji-categories.xml");
+    if verbose {
+        println!("{}", &updated);
+    }
 
-    println!("Updating fallback.xml");
-    fs::write(current_dir.join("fallback.xml"), updated_content).expect("Failed to write fallback.xml");
+    // Step 4: Write updated content
+    fs::write(target_path, &updated)?;
+    fs::write(fallback_path, &updated)?;
 
-    println!("Done!");
+    println!("Successfully updated emoji xml files");
+    Ok(())
+}
+
+/// Parses emoji-test.txt into group → Vec<emoji>
+fn parse_emoji_test_grouped(data: &str) -> HashMap<String, Vec<String>> {
+    let mut emoji_map: HashMap<String, Vec<String>> = HashMap::new();
+    let mut current_group = String::new();
+
+    for line in data.lines() {
+        if line.starts_with("# group: ") && !line.contains("Component") { // remove the component line to prevent clogging stdout with errors (because components are not in the pixel keyboard (gboard) emoji panel)
+            if line["# group: ".len()..].trim().to_string() == "People & Body" {
+                current_group = "Smileys & Emotion".parse().unwrap(); // merge people and body into the smileys and emotion category because AOSP things
+            } else {
+                current_group = line["# group: ".len()..].trim().to_string();
+            }
+        } else if line.contains("; fully-qualified") && !line.contains("skin tone") {
+            if let Some((codepoints, _)) = line.split_once(';') {
+                let code_str = codepoints
+                    .trim()
+                    .split_whitespace()
+                    .map(|cp| cp.to_uppercase())
+                    .collect::<Vec<_>>()
+                    .join(",");
+                emoji_map.entry(current_group.clone()).or_default().push(code_str.clone());
+                if current_group == "Smileys & Emotion" {
+                    emoji_map.entry(current_group.clone() + " - boring").or_default().push(code_str);
+                }
+            }
+        }
+    }
+
+    emoji_map
+}
+
+/// Replaces <array name="..."> with new <item> lines
+fn update_emoji_array(content: &str, array_name: &str, items: &[String], verbose: bool) -> String {
+    let updated = content.to_string();
+
+    let array_re = Regex::new(&format!(
+        r#"(?s)<array[^>]*\bname\s*=\s*"{0}"[^>]*>.*?</array>"#,
+        regex::escape(array_name)
+    )).unwrap();
+
+    let items_str = items
+        .iter()
+        .map(|item| format!("        <item>{}</item>", item))
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    let replacement = format!(
+        r#"<array
+        name="{}"
+        format="string"
+    >
+{}
+    </array>"#,
+        array_name, items_str
+    );
+    if verbose {
+        println!("{}", replacement);
+    }
+
+    array_re.replace(&updated, replacement).to_string()
 }
