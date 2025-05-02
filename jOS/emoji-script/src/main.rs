@@ -30,7 +30,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("Smileys & Emotion - boring", "emoji_eight_smiley_people_boring")
     ]);
 
-    // Step 2: Load fallback.xml
     let exe = env::current_exe().unwrap();
     let current_dir = exe.parent().expect("Could not get current dir");
     if verbose {
@@ -38,15 +37,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     let relative_path = PathBuf::from("../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
     let target_path = current_dir.join(&relative_path);
-    let fallback_path = current_dir.join("emoji-script/fallback.xml");
-    let fallback_content = fs::read_to_string(&fallback_path)?;
+    let template_path = current_dir.join("emoji-script/template.xml");
+    let template_content = fs::read_to_string(&template_path)?;
     // inject emoticons into arrays
     for line in fs::read_to_string(current_dir.join("emoji-script/emoticons"))?.lines() {
         emoji_by_group.entry("Emoticons".parse().unwrap()).or_default().push(line.parse().unwrap());
     }
 
-    // Step 3: Update fallback.xml content
-    let mut updated = fallback_content.clone();
+    let mut updated = template_content.clone();
     for (group, items) in emoji_by_group {
         if let Some(array_name) = group_to_array.get(group.as_str()) {
             if verbose {
@@ -62,9 +60,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!("{}", &updated);
     }
 
-    // Step 4: Write updated content
     fs::write(target_path, &updated)?;
-    fs::write(fallback_path, &updated)?;
+    fs::write(template_path, &updated)?; // update template
 
     println!("Successfully updated emoji xml files");
     Ok(())
