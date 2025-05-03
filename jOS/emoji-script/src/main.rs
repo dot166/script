@@ -9,12 +9,19 @@ use std::path::PathBuf;
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 || args.len() > 3 {
-        eprintln!("Usage: {} [url|https://unicode.org/Public/emoji/16.0/emoji-test.txt] {{-v(Verbose)}}", args[0]);
-        std::process::exit(1);
+        show_usage(&args);
     }
 
     let emoji_url = &args[1];
-    let verbose = args.contains(&"-v".to_string());
+    let verbose;
+    if args.len() == 3 {
+        if args[2] != "-v" {
+            show_usage(&args);
+        }
+        verbose = &args[2] == "-v";
+    } else {
+        verbose = false;
+    }
     let emoji_data = get(emoji_url)?.text()?;
     let mut emoji_by_group = parse_emoji_test_grouped(&emoji_data);
     let group_to_array: HashMap<&str, &str> = HashMap::from([
@@ -127,4 +134,9 @@ fn update_emoji_array(content: &str, array_name: &str, items: &[String], verbose
     }
 
     array_re.replace(&updated, replacement).to_string()
+}
+
+fn show_usage(args: &Vec<String>) {
+    eprintln!("Usage: {} [url|https://unicode.org/Public/emoji/16.0/emoji-test.txt] {{-v(Verbose)}}", args[0]);
+    std::process::exit(1);
 }
