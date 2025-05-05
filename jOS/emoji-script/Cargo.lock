@@ -123,7 +123,7 @@ dependencies = [
 name = "emoji"
 version = "1.0.0"
 dependencies = [
- "regex",
+ "jLib-Rust",
  "reqwest",
 ]
 
@@ -565,6 +565,14 @@ name = "itoa"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
+
+[[package]]
+name = "jLib-Rust"
+version = "0.1.0"
+source = "git+https://github.com/dot166/jOS_j-Lib#8ae5af5bd56d0ebf30c6ceffeb41cb6202923110"
+dependencies = [
+ "regex",
+]
 
 [[package]]
 name = "js-sys"
