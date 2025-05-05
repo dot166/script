@@ -1,10 +1,10 @@
-use regex::Regex;
 use reqwest::blocking::get;
 use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::fs::{self};
 use std::path::PathBuf;
+use jLib_Rust::*;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
@@ -12,7 +12,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         show_usage(&args);
     }
 
-    let emoji_url = &args[1];
     let verbose;
     if args.len() == 3 {
         if args[2] != "-v" {
@@ -20,8 +19,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
         verbose = &args[2] == "-v";
     } else {
+        if !args[1].starts_with("http") {
+            show_usage(&args);
+        }
         verbose = false;
     }
+    let emoji_url = &args[1];
     let emoji_data = get(emoji_url)?.text()?;
     let mut emoji_by_group = parse_emoji_test_grouped(&emoji_data);
     let group_to_array: HashMap<&str, &str> = HashMap::from([
@@ -57,7 +60,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             if verbose {
                 println!("{}", array_name);
             }
-            updated = update_emoji_array(&updated, array_name, &items, verbose);
+            updated = update_android_array(&updated, array_name, &items, verbose);
         } else {
             eprintln!("Skipping group '{}': no array name mapping.", group);
         }
@@ -103,37 +106,6 @@ fn parse_emoji_test_grouped(data: &str) -> HashMap<String, Vec<String>> {
     }
 
     emoji_map
-}
-
-/// Replaces <array name="..."> with new <item> lines
-fn update_emoji_array(content: &str, array_name: &str, items: &[String], verbose: bool) -> String {
-    let updated = content.to_string();
-
-    let array_re = Regex::new(&format!(
-        r#"(?s)<array[^>]*\bname\s*=\s*"{0}"[^>]*>.*?</array>"#,
-        regex::escape(array_name)
-    )).unwrap();
-
-    let items_str = items
-        .iter()
-        .map(|item| format!("        <item>{}</item>", item))
-        .collect::<Vec<_>>()
-        .join("\n");
-
-    let replacement = format!(
-        r#"<array
-        name="{}"
-        format="string"
-    >
-{}
-    </array>"#,
-        array_name, items_str
-    );
-    if verbose {
-        println!("{}", replacement);
-    }
-
-    array_re.replace(&updated, replacement).to_string()
 }
 
 fn show_usage(args: &Vec<String>) {
