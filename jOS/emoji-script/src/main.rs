@@ -1,10 +1,10 @@
+use j_lib_rust::android::*;
 use reqwest::blocking::get;
 use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::fs::{self};
 use std::path::PathBuf;
-use jLib_Rust::*;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
