@@ -1,10 +1,6 @@
 name: build emoji script
 
-on:
-  push:
-    branches: [ "15-qpr2" ]
-  pull_request:
-    branches: [ "15-qpr2" ]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
