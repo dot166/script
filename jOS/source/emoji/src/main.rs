@@ -47,10 +47,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     let relative_path = PathBuf::from("../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
     let target_path = current_dir.join(&relative_path);
-    let template_path = current_dir.join("emoji-script/template.xml");
+    let template_path = current_dir.join("source/emoji/template.xml");
     let template_content = fs::read_to_string(&template_path)?;
     // inject emoticons into arrays
-    for line in fs::read_to_string(current_dir.join("emoji-script/emoticons"))?.lines() {
+    for line in fs::read_to_string(current_dir.join("source/emoji/emoticons"))?.lines() {
         emoji_by_group.entry("Emoticons".parse().unwrap()).or_default().push(line.parse().unwrap());
     }
 
