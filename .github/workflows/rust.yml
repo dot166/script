@@ -16,5 +16,5 @@ jobs:
       run: sudo apt install -y libgtk-4-1 libgtk-4-dev libadwaita-1-0 libadwaita-1-dev
     - name: Build
       run: |
-       cd jOS/emoji-script
+       cd jOS/source/emoji-script
        cargo build --verbose
