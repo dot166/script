@@ -33,4 +33,17 @@ fn main() {
         fs::copy("target/release/".to_owned() + script, get_script_dir().unwrap().join("../".to_owned() + script)).unwrap();
         env::set_current_dir(&Path::new("..")).unwrap();
     }
+    fs::create_dir("tmp").unwrap();
+    env::set_current_dir("tmp").unwrap();
+    let status = Command::new("../../manage").arg("init").status().unwrap();
+    if !status.success() {
+        panic!("Failed to run init script");
+    }
+    println!("TEMP: print directories to screen");
+    let status = Command::new("ls").status().unwrap();
+    if !status.success() {
+        panic!("somehow failed to ls");
+    }
+    env::set_current_dir(&Path::new("..")).unwrap();
+    fs::remove_dir_all("tmp").unwrap();
 }

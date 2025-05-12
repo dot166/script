@@ -20,7 +20,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
     - name: Build
       run: |
-       cd jOS/source/generate-binaries
+       cd jOS/source/ci-tool
        cargo run --release
     - name: Commit changes
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/15-qpr2' && github.repository == 'dot166/script' }}
