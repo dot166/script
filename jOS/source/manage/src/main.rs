@@ -10,7 +10,7 @@ fn main() {
     let action= args[1].clone();
     let mut tag_name = "";
 
-    if action == "push" || action == "fetch" || action == "update" || action == "default" || action == "init" || action == "bupdate" {
+    if action == "update" || action == "default" || action == "init" || action == "bupdate" {
         if args.len() != 2 {panic!("expected no arguments for $action");}
     } else if action == "release" || action == "delete" {
         tag_name = &args[2];
@@ -205,29 +205,6 @@ fn main() {
 
                 if let Err(e) = status {
                     eprintln!("Error pushing changes: {}", e);
-                    exit(1);
-                }
-            },
-            "push" => {
-                let status = Command::new("git")
-                    .arg("push")
-                    .status();
-
-                if let Err(e) = status {
-                    eprintln!("Error pushing changes: {}", e);
-                    exit(1);
-                }
-            },
-            "fetch" => {
-                let status = Command::new("git")
-                    .arg("fetch")
-                    .arg("upstream")
-                    .arg("--tags")
-                    .arg("--force")
-                    .status();
-
-                if let Err(e) = status {
-                    eprintln!("Error fetching upstream tags: {}", e);
                     exit(1);
                 }
             },
@@ -530,29 +507,6 @@ fn main() {
                     exit(1);
                 }
             },
-            "push" => {
-                let status = Command::new("git")
-                    .arg("push")
-                    .status();
-
-                if let Err(e) = status {
-                    eprintln!("Error pushing changes for {}: {}", repo, e);
-                    exit(1);
-                }
-            },
-            "fetch" => {
-                let status = Command::new("git")
-                    .arg("fetch")
-                    .arg("upstream")
-                    .arg("--tags")
-                    .arg("--force")
-                    .status();
-
-                if let Err(e) = status {
-                    eprintln!("Error fetching upstream tags for {}: {}", repo, e);
-                    exit(1);
-                }
-            },
             "default" => {
                 let status = Command::new("gh")
                     .arg("repo")
@@ -800,27 +754,6 @@ fn main() {
 
                 if let Err(e) = status {
                     eprintln!("Error pushing changes: {}", e);
-                    exit(1);
-                }
-            },
-            "push" => {
-                let status = Command::new("git")
-                    .arg("push")
-                    .status();
-
-                if let Err(e) = status {
-                    eprintln!("Error pushing changes: {}", e);
-                    exit(1);
-                }
-            },
-            "fetch" => {
-                let status = Command::new("git")
-                    .arg("fetch")
-                    .arg("upstream")
-                    .status();
-
-                if let Err(e) = status {
-                    eprintln!("Error fetching upstream: {}", e);
                     exit(1);
                 }
             },
@@ -1079,32 +1012,6 @@ fn main() {
                             eprintln!("Error pushing tag {}: {}", repo, e);
                             exit(1);
                         }
-                    }
-                }
-            },
-            "push" => {
-                let status = Command::new("git")
-                    .arg("push")
-                    .status();
-
-                if let Err(e) = status {
-                    eprintln!("Error pushing changes for {}: {}", repo, e);
-                    exit(1);
-                }
-            },
-            "default" => {
-                if repo != "jOS-Updates" && repo != "jOS_j-lib" {
-                    let status = Command::new("gh")
-                        .arg("repo")
-                        .arg("edit")
-                        .arg(format!("dot166/{}", repo))
-                        .arg("--default-branch")
-                        .arg(&branch)
-                        .status();
-
-                    if let Err(e) = status {
-                        eprintln!("Error editing default branch for {}: {}", repo, e);
-                        exit(1);
                     }
                 }
             },
