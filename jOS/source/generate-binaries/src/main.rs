@@ -1,0 +1,36 @@
+use std::{env, fs};
+use std::path::{Path, PathBuf};
+use std::process::Command;
+
+pub fn get_script_dir() -> Option<PathBuf> {
+    let top_file = "build-android/.gitignore";
+
+    // Check the current directory and navigate upwards if necessary
+    let current_dir = env::current_dir().unwrap();
+    let mut pwd = current_dir.clone();
+
+    while pwd != Path::new("/") {
+        let top_path = pwd.join(top_file);
+        if top_path.exists() {
+            return Some(pwd);
+        }
+        pwd = pwd.parent().unwrap_or(Path::new("/")).to_path_buf();
+    }
+
+    None
+}
+
+fn main() {
+    env::set_current_dir(&get_script_dir().unwrap()).expect("Failed to change directory");
+    let scripts = ["build-android", "emoji", "fork-aosp", "manage", "update-checkout"];
+    for script in scripts.iter() {
+        println!("Building {}", script);
+        env::set_current_dir(&Path::new(script)).unwrap();
+        let status = Command::new("cargo").arg("build").arg("--release").status().unwrap();
+        if !status.success() {
+            panic!("Failed to build script: {}", script);
+        }
+        fs::copy("target/release/".to_owned() + script, get_script_dir().unwrap().join("../".to_owned() + script)).unwrap();
+        env::set_current_dir(&Path::new("..")).unwrap();
+    }
+}
