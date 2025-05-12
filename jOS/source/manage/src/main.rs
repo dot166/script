@@ -820,7 +820,7 @@ fn main() {
             }
         }
 
-        if let Err(e) = std::env::set_current_dir(&repo) {
+        if let Err(e) = env::set_current_dir(&repo) {
             eprintln!("Failed to change directory to {}: {}", repo, e);
             exit(1);
         }
@@ -893,18 +893,20 @@ fn main() {
 
         match action.as_str() {
             "delete" => {
-                let _ = Command::new("git")
-                    .arg("tag")
-                    .arg("-d")
-                    .arg(tag_name)
-                    .status();
+                if repo != "jOS_j-lib" {
+                    let _ = Command::new("git")
+                        .arg("tag")
+                        .arg("-d")
+                        .arg(tag_name)
+                        .status();
 
-                let _ = Command::new("git")
-                    .arg("push")
-                    .arg("origin")
-                    .arg("--delete")
-                    .arg(tag_name)
-                    .status();
+                    let _ = Command::new("git")
+                        .arg("push")
+                        .arg("origin")
+                        .arg("--delete")
+                        .arg(tag_name)
+                        .status();
+                }
             },
             "release" => {
                 if repo == "jOS-Updates" {
@@ -1018,7 +1020,7 @@ fn main() {
             _ => {}
         }
 
-        if let Err(e) = std::env::set_current_dir("..") {
+        if let Err(e) = env::set_current_dir("..") {
             eprintln!("Failed to change back to parent directory: {}", e);
             exit(1);
         }
