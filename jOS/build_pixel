@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "This script is deprecated, please use build-android instead"
+
 # Common script utilities
 source $(cd $(dirname $BASH_SOURCE) &> /dev/null && pwd)/../../build/make/shell_utils.sh
 

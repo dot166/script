@@ -16,5 +16,15 @@ jobs:
       run: sudo apt install -y libgtk-4-1 libgtk-4-dev libadwaita-1-0 libadwaita-1-dev
     - name: Build
       run: |
-       cd jOS/source/emoji-script
-       cargo build --verbose
+       cd jOS/source/generate-binaries
+       cargo run --release
+    - name: Commit changes
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/15-qpr2' && github.repository == 'dot166/script' }}
+      run: |
+        git add .
+        git commit -m "update scripts" || true
+    - name: Push changes to repo
+      uses: ad-m/github-push-action@master
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/15-qpr2' && github.repository == 'dot166/script' }}
+      with:
+        branch: ${{ github.ref }}
