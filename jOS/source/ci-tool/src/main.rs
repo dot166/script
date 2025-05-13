@@ -1,6 +1,6 @@
-use std::{env, fs};
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
+use std::{env, fs};
 
 pub fn get_script_dir() -> Option<PathBuf> {
     let top_file = "build-android/.gitignore";
@@ -21,12 +21,13 @@ pub fn get_script_dir() -> Option<PathBuf> {
 }
 
 fn main() {
+    println!("{:?}", env::var("IS_CI"));
     env::set_current_dir(&get_script_dir().unwrap()).expect("Failed to change directory");
     let scripts = ["build-android", "emoji", "fork-aosp", "manage", "update-checkout"];
     for script in scripts.iter() {
         println!("Building {}", script);
         env::set_current_dir(&Path::new(script)).unwrap();
-        let status = Command::new("cargo").arg("build").arg("--release").status().unwrap();
+        let status = Command::new("cargo").arg("build").arg("--release").stdout(Stdio::piped()).status().unwrap();
         if !status.success() {
             panic!("Failed to build script: {}", script);
         }
@@ -35,15 +36,23 @@ fn main() {
     }
     fs::create_dir("tmp").unwrap();
     env::set_current_dir("tmp").unwrap();
-    let status = Command::new("../../manage").arg("init").status().unwrap();
+    let status = Command::new("bash").arg("-c").arg(format!("echo {:?} | gh auth login --with-token", env::var("GH_TOKEN").unwrap())).stdout(Stdio::piped()).status().unwrap();
+    if !status.success() {
+        panic!("Failed to auth with token on CI"); 
+    }
+    let status = Command::new("../../manage").arg("init").stdout(Stdio::piped()).status().unwrap();
     if !status.success() {
         panic!("Failed to run init script");
     }
     println!("TEMP: print directories to screen");
-    let status = Command::new("ls").status().unwrap();
+    let status = Command::new("ls").stdout(Stdio::piped()).status().unwrap();
     if !status.success() {
         panic!("somehow failed to ls");
     }
     env::set_current_dir(&Path::new("..")).unwrap();
     fs::remove_dir_all("tmp").unwrap();
+    let status = Command::new("bash").arg("-c").arg("gh auth logout").stdout(Stdio::piped()).status().unwrap();
+    if !status.success() {
+        panic!("Failed to deauth on CI");
+    }
 }
