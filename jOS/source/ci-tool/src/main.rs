@@ -36,10 +36,6 @@ fn main() {
     }
     fs::create_dir("tmp").unwrap();
     env::set_current_dir("tmp").unwrap();
-    let status = Command::new("bash").arg("-c").arg(format!("echo {:?} | gh auth login --with-token", env::var("GH_TOKEN").unwrap())).stdout(Stdio::piped()).status().unwrap();
-    if !status.success() {
-        panic!("Failed to auth with token on CI"); 
-    }
     let status = Command::new("../../manage").arg("init").stdout(Stdio::piped()).status().unwrap();
     if !status.success() {
         panic!("Failed to run init script");
@@ -51,8 +47,4 @@ fn main() {
     }
     env::set_current_dir(&Path::new("..")).unwrap();
     fs::remove_dir_all("tmp").unwrap();
-    let status = Command::new("bash").arg("-c").arg("gh auth logout").stdout(Stdio::piped()).status().unwrap();
-    if !status.success() {
-        panic!("Failed to deauth on CI");
-    }
 }
