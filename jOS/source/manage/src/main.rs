@@ -3,16 +3,26 @@ use std::process::{exit, Command};
 use lib_aosp::scripts;
 
 fn main() {
+    let graphene_tag_old = "2025031400";
+    let graphene_tag = "2025042500";
+    let lineage_latest_branch = "lineage-22.2";
     let (mut aosp_tag, mut aosp_tag_old, mut branch) = scripts::read_common_sh();
-    let (mut graphene_tag, mut graphene_tag_old, mut cm_latest_branch) = scripts::read_config_file();
     let args: Vec<String> = env::args().collect();
     if args.len() == 1 { panic!("expected action as argument");}
     let action= args[1].clone();
     let mut tag_name = "";
 
     if action == "update" || action == "default" || action == "init" || action == "bupdate" {
+        if env::var("IS_CI").unwrap() == "true" && (action != "update" && action != "init") {
+            println!("cannot use {} in ci, this is done to prevent the ci from destroying the source tree", action);
+            exit(0);
+        }
         if args.len() != 2 {panic!("expected no arguments for $action");}
     } else if action == "release" || action == "delete" {
+        if env::var("IS_CI").unwrap() == "true" {
+            println!("cannot use {} in ci, this is done to prevent the ci from destroying the source tree", action);
+            exit(0);
+        }
         tag_name = &args[2];
         if args.len() != 3 {panic!("expected tag name as argument for $action");}
     } else {
@@ -30,6 +40,7 @@ fn main() {
         "platform_build_release",
         "platform_frameworks_base",
         "jOS_manifest",
+        "platform_packages_apps_DeskClock",
         "platform_packages_apps_Dialer",
         "platform_packages_apps_ExactCalculator",
         "platform_packages_apps_Launcher3",
@@ -39,10 +50,9 @@ fn main() {
         "platform_packages_apps_Updater",
         "platform_packages_inputmethods_LatinIME",
         "platform_packages_services_telecomm",
-        "script",
     ];
 
-    let cyanogenmod_forks=[
+    let lineageos_forks=[
         "platform_packages_apps_Recorder",
         "platform_packages_apps_Etar",
     ];
@@ -52,6 +62,167 @@ fn main() {
         "jOS-System",
         "jOS-Updates",
     ];
+
+    println!("\n>>> Handling script");
+
+        if action == "init" {
+            let status = Command::new("git")
+                .arg("clone")
+                .arg("https://github.com/dot166/script")
+                .status();
+
+            if let Err(e) = status {
+                eprintln!("Error cloning script: {}", e);
+                exit(1);
+            }
+        }
+
+        if let Err(e) = env::set_current_dir("script") {
+            eprintln!("Failed to change directory to script: {}", e);
+            exit(1);
+        }
+
+        if action != "bupdate" {
+            let status = Command::new("git")
+                .arg("checkout")
+                .arg(&branch)
+                .status();
+
+            if let Err(e) = status {
+                eprintln!("Error checking out branch {}: {}", &branch, e);
+                exit(1);
+            }
+        }
+
+        let status = Command::new("git")
+            .arg("pull")
+            .status();
+
+        if let Err(e) = status {
+            eprintln!("Error pulling changes for script: {}", e);
+            exit(1);
+        }
+
+        match action.as_str() {
+            "delete" => {
+                let _ = Command::new("git")
+                    .arg("tag")
+                    .arg("-d")
+                    .arg(tag_name)
+                    .status();
+
+                let _ = Command::new("git")
+                    .arg("push")
+                    .arg("origin")
+                    .arg("--delete")
+                    .arg(tag_name)
+                    .status();
+            },
+            "release" => {
+                let status = Command::new("git")
+                    .arg("tag")
+                    .arg("-s")
+                    .arg(tag_name)
+                    .arg("-m")
+                    .arg(tag_name)
+                    .status();
+
+                if let Err(e) = status {
+                    eprintln!("Error creating release tag {}: {}", tag_name, e);
+                    exit(1);
+                }
+
+                let status = Command::new("git")
+                    .arg("push")
+                    .arg("origin")
+                    .arg(tag_name)
+                    .status();
+
+                if let Err(e) = status {
+                    eprintln!("Error pushing release tag {}: {}", tag_name, e);
+                    exit(1);
+                }
+            },
+            "update" => {
+                let status = Command::new("git")
+                    .arg("fetch")
+                    .arg("upstream")
+                    .arg("--tags")
+                    .arg("--force")
+                    .status();
+
+                if let Err(e) = status {
+                    eprintln!("Error fetching upstream tags: {}", e);
+                    exit(1);
+                }
+
+                let status = Command::new("git")
+                    .arg("rebase")
+                    .arg("--onto")
+                    .arg(&graphene_tag)
+                    .arg(&graphene_tag_old)
+                    .status();
+
+                if let Err(e) = status {
+                    eprintln!("Error rebasing script: {}", e);
+                    exit(1);
+                }
+
+                (aosp_tag, aosp_tag_old, branch) = scripts::read_common_sh();
+
+                let status = Command::new("git")
+                    .arg("push")
+                    .arg("-f")
+                    .status();
+
+                if let Err(e) = status {
+                    eprintln!("Error pushing changes for script: {}", e);
+                    exit(1);
+                }
+            },
+            "default" => {
+                let status = Command::new("gh")
+                    .arg("repo")
+                    .arg("edit")
+                    .arg("dot166/script")
+                    .arg("--default-branch")
+                    .arg(&branch)
+                    .status();
+
+                if let Err(e) = status {
+                    eprintln!("Error editing default branch for script: {}", e);
+                    exit(1);
+                }
+            },
+            _ => {}
+        }
+
+        if action == "init" {
+            let remote_url = "https://github.com/grapheneos/script";
+
+            let status = Command::new("git")
+                .arg("remote")
+                .arg("add")
+                .arg("upstream")
+                .arg(remote_url)
+                .status();
+
+            if let Err(e) = status {
+                eprintln!("Error adding upstream for script: {}", e);
+                exit(1);
+            }
+
+            let status = Command::new("git")
+                .arg("fetch")
+                .arg("upstream")
+                .arg("--tags")
+                .status();
+
+            if let Err(e) = status {
+                eprintln!("Error fetching upstream tags for script: {}", e);
+                exit(1);
+            }
+        }
 
     for repo in grapheneos_forks {
         println!("\n>>> Handling {}", repo);
@@ -83,7 +254,7 @@ fn main() {
                 eprintln!("Error checking out branch {}: {}", &branch, e);
                 exit(1);
             }
-        } else if repo != "script" {
+        } else {
             let status = Command::new("git")
                 .arg("checkout")
                 .arg("origin")
@@ -291,11 +462,6 @@ fn main() {
                     if let Err(e) = status {
                         eprintln!("Error rebasing {}: {}", repo, e);
                         exit(1);
-                    }
-
-                    if repo == "script" {
-                        (aosp_tag, aosp_tag_old, branch) = scripts::read_common_sh();
-                        (graphene_tag, graphene_tag_old, cm_latest_branch) = scripts::read_config_file();
                     }
                 }
 
@@ -561,7 +727,7 @@ fn main() {
         }
     }
 
-    for repo in cyanogenmod_forks {
+    for repo in lineageos_forks {
         println!("\n>>> Handling {}", repo);
 
         if action == "init" {
@@ -688,8 +854,8 @@ fn main() {
 
                 let rebase_status = Command::new("git")
                     .arg("rebase")
-                    .arg(format!("--onto upstream/{}", cm_latest_branch))
-                    .arg(fs::read_to_string("upstream-cm-commit").expect("Failed to read cm commit"))
+                    .arg(format!("--onto upstream/{}", lineage_latest_branch))
+                    .arg(fs::read_to_string("upstream-cm-commit").expect("Failed to read lineage commit"))
                     .status();
 
                 if let Err(e) = rebase_status {
@@ -697,16 +863,16 @@ fn main() {
                     exit(1);
                 }
 
-                fs::remove_file("upstream-cm-commit").expect("Failed to remove upstream-cm-commit file");
+                fs::remove_file("upstream-cm-commit").expect("Failed to remove upstream-lineage-commit file");
 
                 let rev_parse_status = Command::new("git")
                     .arg("rev-parse")
-                    .arg(format!("--verify upstream/{}", cm_latest_branch))
+                    .arg(format!("--verify upstream/{}", lineage_latest_branch))
                     .output();
 
                 if let Ok(output) = rev_parse_status {
-                    let cm_commit = String::from_utf8_lossy(&output.stdout);
-                    fs::write("upstream-cm-commit", &*cm_commit).expect("Failed to write cm commit to file");
+                    let lineage_commit = String::from_utf8_lossy(&output.stdout);
+                    fs::write("upstream-cm-commit", &*lineage_commit).expect("Failed to write lineage commit to file");
                 } else {
                     eprintln!("Error getting commit hash for {}: {}", repo, rev_parse_status.unwrap_err());
                     exit(1);
@@ -743,7 +909,7 @@ fn main() {
                     let status = Command::new("git")
                         .arg("commit")
                         .arg("-m")
-                        .arg("update to a newer cm commit")
+                        .arg("update to a newer lineage commit")
                         .status();
 
                     if let Err(e) = status {
