@@ -27,7 +27,7 @@ fn main() {
     for script in scripts.iter() {
         println!("Building {}", script);
         env::set_current_dir(&Path::new(script)).unwrap();
-        let status = Command::new("cargo").arg("build").arg("--release").stdout(Stdio::piped()).status().unwrap();
+        let status = Command::new("cargo").arg("build").arg("--release").status().unwrap();
         if !status.success() {
             panic!("Failed to build script: {}", script);
         }
@@ -36,12 +36,12 @@ fn main() {
     }
     fs::create_dir("tmp").unwrap();
     env::set_current_dir("tmp").unwrap();
-    let status = Command::new("../../manage").arg("init").stdout(Stdio::piped()).status().unwrap();
+    let status = Command::new("../../manage").arg("init").status().unwrap();
     if !status.success() {
         panic!("Failed to run init script");
     }
     println!("TEMP: print directories to screen");
-    let status = Command::new("ls").stdout(Stdio::piped()).status().unwrap();
+    let status = Command::new("ls").status().unwrap();
     if !status.success() {
         panic!("somehow failed to ls");
     }
