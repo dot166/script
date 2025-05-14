@@ -36,9 +36,9 @@ fn main() {
     }
     let status = Command::new("git")
         .arg("commit")
-        .arg(".")
+        .arg("../../.")
         .arg("-m")
-        .arg("")
+        .arg(format!("rebuilt scripts {}", chrono::offset::Utc::now().date_naive().format("%Y%m%d")))
         .status();
 
     if let Err(e) = status {
@@ -47,12 +47,10 @@ fn main() {
 
     let status = Command::new("git")
         .arg("push")
-        .arg("-fu")
         .status();
 
     if let Err(e) = status {
-        eprintln!("Error pushing changes: {}", e);
-        exit(1);
+        panic!("Error pushing changes: {}", e);
     }
     fs::create_dir("tmp").unwrap();
     env::set_current_dir("tmp").unwrap();
