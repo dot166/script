@@ -23,13 +23,3 @@ jobs:
       run: |
        cd jOS/source/ci-tool
        cargo run --release
-    - name: Commit changes
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/15-qpr2' && github.repository == 'dot166/script' }}
-      run: |
-        git add .
-        git commit -m "update scripts" || true
-    - name: Push changes to repo
-      uses: ad-m/github-push-action@master
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/15-qpr2' && github.repository == 'dot166/script' }}
-      with:
-        branch: ${{ github.ref }}
