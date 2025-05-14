@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 use std::process::{exit, Command};
-use std::{env, fs};
+use std::{env, fs, thread, time};
 
 pub fn get_script_dir() -> Option<PathBuf> {
     let top_file = "build-android/.gitignore";
@@ -52,6 +52,11 @@ fn main() {
     if let Err(e) = status {
         panic!("Error pushing changes: {}", e);
     }
+    thread::sleep(time::Duration::from_secs(5));
+    let status = Command::new("bash").arg("-c").arg(format!("echo {:?} | gh auth login --with-token", env::var("GH_AUTH_TOKEN").unwrap())).status().unwrap();
+    if !status.success() {
+        panic!("Failed to auth with token on CI");
+    }
     fs::create_dir("tmp").unwrap();
     env::set_current_dir("tmp").unwrap();
     let status = Command::new("../../manage").arg("init").status().unwrap();
@@ -64,4 +69,8 @@ fn main() {
     }
     env::set_current_dir(&Path::new("..")).unwrap();
     fs::remove_dir_all("tmp").unwrap();
+    let status = Command::new("bash").arg("-c").arg("gh auth logout").status().unwrap();
+    if !status.success() {
+        panic!("Failed to deauth on CI");
+    }
 }
