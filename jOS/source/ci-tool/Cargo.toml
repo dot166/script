@@ -5,4 +5,3 @@ edition = "2024"
 
 [dependencies]
 chrono = "0.4.41"
-lib_aosp = { git = "https://github.com/dot166/lib_aosp" }
