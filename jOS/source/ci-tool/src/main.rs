@@ -1,5 +1,5 @@
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{exit, Command};
 use std::{env, fs};
 
 pub fn get_script_dir() -> Option<PathBuf> {
@@ -33,6 +33,26 @@ fn main() {
         }
         fs::copy("target/release/".to_owned() + script, get_script_dir().unwrap().join("../".to_owned() + script)).unwrap();
         env::set_current_dir(&Path::new("..")).unwrap();
+    }
+    let status = Command::new("git")
+        .arg("commit")
+        .arg(".")
+        .arg("-m")
+        .arg("")
+        .status();
+
+    if let Err(e) = status {
+        panic!("Error committing changes: {}", e);
+    }
+
+    let status = Command::new("git")
+        .arg("push")
+        .arg("-fu")
+        .status();
+
+    if let Err(e) = status {
+        eprintln!("Error pushing changes: {}", e);
+        exit(1);
     }
     fs::create_dir("tmp").unwrap();
     env::set_current_dir("tmp").unwrap();
