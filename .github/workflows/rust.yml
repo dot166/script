@@ -5,7 +5,6 @@ on: [push, pull_request, workflow_dispatch]
 env:
   CARGO_TERM_COLOR: always
   GH_TOKEN: ${{ secrets.GH_TOKEN }} # setting GH_TOKEN for the entire workflow
-  IS_CI: true
 
 jobs:
   build:

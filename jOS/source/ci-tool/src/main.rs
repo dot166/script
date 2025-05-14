@@ -21,7 +21,7 @@ pub fn get_script_dir() -> Option<PathBuf> {
 }
 
 fn main() {
-    println!("{:?}", env::var("IS_CI"));
+    unsafe { env::set_var("IS_CI", "true"); }
     env::set_current_dir(&get_script_dir().unwrap()).expect("Failed to change directory");
     let scripts = ["build-android", "emoji", "fork-aosp", "manage", "update-checkout"];
     for script in scripts.iter() {
@@ -40,10 +40,9 @@ fn main() {
     if !status.success() {
         panic!("Failed to run init script");
     }
-    println!("TEMP: print directories to screen");
-    let status = Command::new("ls").status().unwrap();
+    let status = Command::new("../../manage").arg("update").status().unwrap();
     if !status.success() {
-        panic!("somehow failed to ls");
+        panic!("Failed to rebase!!! source tree may be corrupted!!");
     }
     env::set_current_dir(&Path::new("..")).unwrap();
     fs::remove_dir_all("tmp").unwrap();

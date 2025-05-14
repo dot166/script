@@ -3,8 +3,8 @@ use std::process::{exit, Command};
 use lib_aosp::scripts;
 
 fn main() {
-    let graphene_tag_old = "2025031400";
-    let graphene_tag = "2025042500";
+    let graphene_tag_old = "2025042500";
+    let graphene_tag = "2025050700";
     let lineage_latest_branch = "lineage-22.2";
     let (mut aosp_tag, mut aosp_tag_old, mut branch) = scripts::read_common_sh();
     let args: Vec<String> = env::args().collect();
