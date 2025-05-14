@@ -515,7 +515,7 @@ dependencies = [
 [[package]]
 name = "lib_aosp"
 version = "0.1.0"
-source = "git+https://github.com/dot166/lib_aosp#50dadb3e5454e86a3f24fb1a784e08d68c029837"
+source = "git+https://github.com/dot166/lib_aosp#7ee1c5bb5eb07308747ee52bf169bd390fe7505f"
 dependencies = [
  "j_lib_rust",
 ]
