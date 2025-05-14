@@ -1,5 +1,5 @@
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Command;
 use std::{env, fs};
 
 pub fn get_script_dir() -> Option<PathBuf> {
