@@ -222,6 +222,11 @@ fn main() {
             }
         }
 
+        if let Err(e) = env::set_current_dir("..") {
+            eprintln!("Failed to change back to parent directory: {}", e);
+            exit(1);
+        }
+
     for repo in aosp_forks {
         println!("\n>>> Handling {}", repo);
 
