@@ -11,13 +11,13 @@ fn main() {
     let mut tag_name = "";
 
     if action == "update" || action == "default" || action == "init" || action == "bupdate" {
-        if env::var("IS_CI").unwrap() == "true" && action != "init" {
+        if env::var("IS_CI").unwrap_or("false".parse().unwrap()) == "true" && action != "init" {
             println!("cannot use {} in ci, this is done to prevent the ci from destroying the source tree", action);
             exit(0);
         }
         if args.len() != 2 {panic!("expected no arguments for $action");}
     } else if action == "release" || action == "delete" {
-        if env::var("IS_CI").unwrap() == "true" {
+        if env::var("IS_CI").unwrap_or("false".parse().unwrap()) == "true" {
             println!("cannot use {} in ci, this is done to prevent the ci from destroying the source tree", action);
             exit(0);
         }
