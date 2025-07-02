@@ -1,5 +1,5 @@
 use std::env;
-use std::process::{Command, Stdio};
+use std::process::Command;
 use lib_aosp::build;
 
 fn main() {
@@ -29,7 +29,6 @@ fn run_emulator() {
     Command::new("bash")
         .arg("-c")
         .arg("emulator")
-        .stdout(Stdio::piped())
         .spawn()
         .unwrap()
         .wait_with_output()
