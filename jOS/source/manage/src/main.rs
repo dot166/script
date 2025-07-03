@@ -1148,6 +1148,21 @@ fn main() {
                     }
                 }
             },
+            "default" => {
+                if repo != "jOS-Updates" && repo != "jOS_j-lib" {
+                    let status = Command::new("gh")
+                        .arg("repo")
+                        .arg("edit")
+                        .arg(format!("dot166/{}", repo))
+                        .arg("--default-branch")
+                        .arg(&branch)
+                        .status();
+
+                    if status.is_err() {
+                        panic!("Error editing default branch for {}: {}", repo, status.unwrap_err());
+                    }
+                }
+            },
             _ => {}
         }
 
