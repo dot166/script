@@ -514,10 +514,9 @@ fn main() {
                         panic!("Error checking out tmp branch for {}: {}", repo, status.unwrap_err());
                     }
 
-                    let status = Command::new("sed")
-                        .arg("-i")
-                        .arg(format!("s%refs/heads/{}%refs/tags/%{}% default.xml", &branch, tag_name))
-                        .status();
+                    let data = fs::read_to_string(env::current_dir().unwrap().join("default.xml")).unwrap();
+                    let new = data.replace(&branch, tag_name);
+                    let status = fs::write(env::current_dir().unwrap().join("default.xml"), &new);
 
                     if status.is_err() {
                         panic!("Error updating default.xml for {}: {}", repo, status.unwrap_err());
@@ -592,13 +591,12 @@ fn main() {
                         panic!("Error rebasing {}: {}", repo, status.unwrap_err());
                     }
 
-                    let status = Command::new("sed")
-                        .arg("-i")
-                        .arg(format!("s%refs/tags/{}%refs/tags/%{}% default.xml", graphene_tag_old, graphene_tag))
-                        .status();
+                    let data = fs::read_to_string(env::current_dir().unwrap().join("default.xml")).unwrap();
+                    let new = data.replace(&graphene_tag_old, &graphene_tag);
+                    let status = fs::write(env::current_dir().unwrap().join("default.xml"), &new);
 
                     if status.is_err() {
-                        panic!("Error updating default.xml for {}: {}", repo, status.unwrap_err());
+                        panic!("Error updating default.xml for {}: {}", "manifest", status.unwrap_err());
                     }
 
                     let status = Command::new("git")
