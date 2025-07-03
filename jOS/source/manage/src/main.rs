@@ -844,8 +844,8 @@ fn main() {
                     .arg(format!("upstream/{}", lineage_latest_branch))
                     .output();
 
-                if let Ok(output) = rev_parse_status {
-                    fs::write("upstream-cm-commit", output.stdout).expect("Failed to write lineage commit to file");
+                if rev_parse_status.is_ok() {
+                    fs::write("upstream-cm-commit", rev_parse_status.unwrap().stdout).expect("Failed to write lineage commit to file");
                 } else {
                     panic!("Error getting commit hash for {}: {}", repo, rev_parse_status.unwrap_err());
                 }
