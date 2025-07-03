@@ -829,7 +829,7 @@ fn main() {
                     .arg("rebase")
                     .arg("--onto")
                     .arg(format!("upstream/{}", lineage_latest_branch))
-                    .arg(fs::read_to_string("upstream-cm-commit").expect("Failed to read lineage commit"))
+                    .arg(fs::read_to_string("upstream-cm-commit").expect("Failed to read lineage commit").replace("\n", ""))
                     .status();
 
                 if rebase_status.is_err() {
