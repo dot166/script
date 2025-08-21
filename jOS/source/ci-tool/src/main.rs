@@ -12,7 +12,7 @@ pub fn get_script_dir() -> Option<PathBuf> {
     while pwd != Path::new("/") {
         let top_path = pwd.join(top_file);
         if top_path.exists() {
-            return Some(pwd);https://github.com/dot166/script/edit/16/jOS/source/ci-tool/src/main.rs
+            return Some(pwd);
         }
         pwd = pwd.parent().unwrap_or(Path::new("/")).to_path_buf();
     }
