@@ -38,6 +38,7 @@ fn main() {
         fs::copy("target/release/".to_owned() + script, get_script_dir().unwrap().join("../".to_owned() + script)).unwrap();
         env::set_current_dir(&Path::new("..")).unwrap();
     }
+    fs::copy("manage/target/release/libj_lib_rust.so", get_script_dir().unwrap().join("../libj_lib_rust.so")).unwrap();
     let status = Command::new("git")
         .arg("commit")
         .arg("../../.")
