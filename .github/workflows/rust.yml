@@ -24,4 +24,5 @@ jobs:
     - name: Run CI Tool
       run: |
        cd jOS/source/ci-tool
+       cargo update
        cargo run --release
