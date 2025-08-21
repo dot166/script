@@ -1,4 +1,4 @@
-use j_lib_rust::android::*;
+use j_lib_rust::android_util::*;
 use reqwest::blocking::get;
 use std::collections::HashMap;
 use std::env;
