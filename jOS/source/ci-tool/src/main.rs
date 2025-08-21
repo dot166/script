@@ -27,6 +27,10 @@ fn main() {
     for script in scripts.iter() {
         println!("Building {}", script);
         env::set_current_dir(&Path::new(script)).unwrap();
+        let status = Command::new("cargo").arg("update").status().unwrap();
+        if !status.success() {
+            panic!("Failed to update dependencies of script: {}", script);
+        }
         let status = Command::new("cargo").arg("build").arg("--release").status().unwrap();
         if !status.success() {
             panic!("Failed to build script: {}", script);
