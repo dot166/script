@@ -12,7 +12,7 @@ pub fn get_script_dir() -> Option<PathBuf> {
     while pwd != Path::new("/") {
         let top_path = pwd.join(top_file);
         if top_path.exists() {
-            return Some(pwd);
+            return Some(pwd);https://github.com/dot166/script/edit/16/jOS/source/ci-tool/src/main.rs
         }
         pwd = pwd.parent().unwrap_or(Path::new("/")).to_path_buf();
     }
@@ -38,7 +38,7 @@ fn main() {
         fs::copy("target/release/".to_owned() + script, get_script_dir().unwrap().join("../".to_owned() + script)).unwrap();
         env::set_current_dir(&Path::new("..")).unwrap();
     }
-    fs::copy("manage/target/release/libj_lib_rust.so", get_script_dir().unwrap().join("../libj_lib_rust.so")).unwrap();
+    fs::copy("manage/target/release/libj_lib_rust.so", get_script_dir().unwrap().join("libj_lib_rust.so")).unwrap();
     let status = Command::new("git")
         .arg("commit")
         .arg("../../.")
