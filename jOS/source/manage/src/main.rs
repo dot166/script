@@ -33,7 +33,6 @@ fn main() {
     let grapheneos_forks=[
         "platform_bootable_recovery",
         "platform_build",
-        "platform_build_release",
         "platform_frameworks_base",
         "jOS_manifest",
         "platform_packages_apps_DeskClock",
