@@ -14,7 +14,7 @@ dependencies = [
 [[package]]
 name = "j_lib_rust"
 version = "0.1.0"
-source = "git+https://github.com/dot166/jOS_j-Lib#793fb56b1d4d8b61011729cd0c76271301c03743"
+source = "git+https://github.com/dot166/jOS_j-Lib#dac7d95ce50f65708e13cae2679f89a30c76a308"
 dependencies = [
  "regex",
 ]
