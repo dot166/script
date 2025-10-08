@@ -34,6 +34,7 @@ fn main() {
         "platform_bootable_recovery",
         "platform_build",
         "platform_frameworks_base",
+        "platform_frameworks_libs_systemui",
         "jOS_manifest",
         "platform_packages_apps_DeskClock",
         "platform_packages_apps_Dialer",
