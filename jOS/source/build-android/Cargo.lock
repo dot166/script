@@ -21,7 +21,7 @@ dependencies = [
 [[package]]
 name = "j_lib_rust"
 version = "0.1.0"
-source = "git+https://github.com/dot166/jOS_j-Lib#2aac241da08138429c8797405d62d1c3a4cdef48"
+source = "git+https://github.com/dot166/jOS_j-Lib#cd530107042364016ee8cc2f516488069c7764e3"
 dependencies = [
  "regex",
 ]
@@ -29,7 +29,7 @@ dependencies = [
 [[package]]
 name = "lib_aosp"
 version = "0.1.0"
-source = "git+https://github.com/dot166/lib_aosp#7f83b80a2cf3b2dbfd55c266d03185f5f0dd993d"
+source = "git+https://github.com/dot166/lib_aosp#2c6642a3a93e144a48c1000337f6a6ed8dd25ff7"
 dependencies = [
  "j_lib_rust",
 ]
@@ -42,9 +42,9 @@ checksum = "f52b00d39961fc5b2736ea853c9cc86238e165017a493d1d5c8eac6bdc4cc273"
 
 [[package]]
 name = "regex"
-version = "1.12.1"
+version = "1.12.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a52d8d02cacdb176ef4678de6c052efb4b3da14b78e4db683a4252762be5433"
+checksum = "843bc0191f75f3e22651ae5f1e72939ab2f72a4bc30fa80a066bd66edefc24d4"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -54,9 +54,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.12"
+version = "0.4.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "722166aa0d7438abbaa4d5cc2c649dac844e8c56d82fb3d33e9c34b5cd268fc6"
+checksum = "5276caf25ac86c8d810222b3dbb938e512c55c6831a10f3e6ed1c93b84041f1c"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -65,6 +65,6 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.8.7"
+version = "0.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3160422bbd54dd5ecfdca71e5fd59b7b8fe2b1697ab2baf64f6d05dcc66d298"
+checksum = "7a2d987857b319362043e95f5353c0535c1f58eec5336fdfcf626430af7def58"
