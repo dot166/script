@@ -826,66 +826,75 @@ fn main() {
 
                 let rebase_status = Command::new("git")
                     .arg("rebase")
-                    .arg("--onto")
                     .arg(format!("upstream/{}", lineage_latest_branch))
-                    .arg(fs::read_to_string("upstream-cm-commit").expect("Failed to read lineage commit").replace("\n", ""))
                     .status();
 
                 if rebase_status.is_err() {
                     panic!("Error during rebase for {}: {}", repo, rebase_status.unwrap_err());
                 }
 
-                fs::remove_file("upstream-cm-commit").expect("Failed to remove upstream-lineage-commit file");
+                //let rebase_status = Command::new("git")
+                //    .arg("rebase")
+                //    .arg("--onto")
+                //    .arg(format!("upstream/{}", lineage_latest_branch))
+                //    .arg(fs::read_to_string("upstream-cm-commit").expect("Failed to read lineage commit").replace("\n", ""))
+                //    .status();
 
-                let rev_parse_status = Command::new("git")
-                    .arg("rev-parse")
-                    .arg("--verify")
-                    .arg(format!("upstream/{}", lineage_latest_branch))
-                    .output();
+                //if rebase_status.is_err() {
+                //    panic!("Error during rebase for {}: {}", repo, rebase_status.unwrap_err());
+                //}
 
-                if rev_parse_status.is_ok() {
-                    fs::write("upstream-cm-commit", rev_parse_status.unwrap().stdout).expect("Failed to write lineage commit to file");
-                } else {
-                    panic!("Error getting commit hash for {}: {}", repo, rev_parse_status.unwrap_err());
-                }
+                //fs::remove_file("upstream-cm-commit").expect("Failed to remove upstream-lineage-commit file");
 
-                let status = Command::new("git")
-                    .arg("diff")
-                    .arg("--quiet")
-                    .status();
+                //let rev_parse_status = Command::new("git")
+                //    .arg("rev-parse")
+                //    .arg("--verify")
+                //    .arg(format!("upstream/{}", lineage_latest_branch))
+                //    .output();
 
-                let changes = if let Ok(status) = status {
-                    if status.success() {
-                        0
-                    } else {
-                        1
-                    }
-                } else {
-                    1
-                };
+                //if rev_parse_status.is_ok() {
+                //    fs::write("upstream-cm-commit", rev_parse_status.unwrap().stdout).expect("Failed to write lineage commit to file");
+                //} else {
+                //    panic!("Error getting commit hash for {}: {}", repo, rev_parse_status.unwrap_err());
+                //}
 
-                println!("CHANGES={}", changes);
+                //let status = Command::new("git")
+                //    .arg("diff")
+                //    .arg("--quiet")
+                //    .status();
 
-                if changes == 1 {
-                    let status = Command::new("git")
-                        .arg("add")
-                        .arg(".")
-                        .status();
+                //let changes = if let Ok(status) = status {
+                //    if status.success() {
+                //        0
+                //    } else {
+                //        1
+                //    }
+                //} else {
+                //    1
+                //};
 
-                    if status.is_err() {
-                        panic!("Error staging changes: {}", status.unwrap_err());
-                    }
+                //println!("CHANGES={}", changes);
 
-                    let status = Command::new("git")
-                        .arg("commit")
-                        .arg("-m")
-                        .arg("update to a newer lineage commit")
-                        .status();
+                //if changes == 1 {
+                //    let status = Command::new("git")
+                //        .arg("add")
+                //        .arg(".")
+                //        .status();
 
-                    if status.is_err() {
-                        panic!("Error committing changes: {}", status.unwrap_err());
-                    }
-                }
+                //    if status.is_err() {
+                //        panic!("Error staging changes: {}", status.unwrap_err());
+                //    }
+
+                //    let status = Command::new("git")
+                //        .arg("commit")
+                //        .arg("-m")
+                //        .arg("update to a newer lineage commit")
+                //        .status();
+
+                //    if status.is_err() {
+                //        panic!("Error committing changes: {}", status.unwrap_err());
+                //    }
+                //}
 
                 let status = Command::new("git")
                     .arg("push")
