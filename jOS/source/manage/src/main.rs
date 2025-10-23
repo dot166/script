@@ -42,7 +42,6 @@ fn main() {
         "platform_packages_apps_Launcher3",
         "platform_packages_apps_Settings",
         "platform_packages_apps_SetupWizard2",
-        "platform_packages_apps_ThemePicker",
         "platform_packages_apps_Updater",
         "platform_packages_inputmethods_LatinIME",
         "platform_packages_services_telecomm",
