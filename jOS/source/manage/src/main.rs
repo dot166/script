@@ -54,7 +54,6 @@ fn main() {
 
     let independent=[
         "jOS_j-lib",
-        "jOS-System",
         "jOS-Updates",
     ];
 
