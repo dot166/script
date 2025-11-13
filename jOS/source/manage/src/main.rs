@@ -73,14 +73,6 @@ fn main() {
             panic!("Failed to change directory to script: {}", status.unwrap_err());
         }
 
-        let status = Command::new("git")
-            .arg("fetch")
-            .status();
-
-        if status.is_err() {
-            panic!("Error pulling changes for script: {}", status.unwrap_err());
-        }
-
         if action != "bupdate" {
             let status = Command::new("git")
                 .arg("checkout")
@@ -90,6 +82,14 @@ fn main() {
             if status.is_err() {
                 panic!("Error checking out branch {}: {}", &branch, status.unwrap_err());
             }
+        }
+
+        let status = Command::new("git")
+            .arg("pull")
+            .status();
+
+        if status.is_err() {
+            panic!("Error pulling changes for script: {}", status.unwrap_err());
         }
 
         match action.as_str() {
@@ -232,14 +232,6 @@ fn main() {
             panic!("Failed to change directory to {}: {}", repo, status.unwrap_err());
         }
 
-        let status = Command::new("git")
-            .arg("fetch")
-            .status();
-
-        if status.is_err() {
-            panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
-        }
-
         match action.as_str() {
             "bupdate" => {
                 let status = Command::new("git")
@@ -249,6 +241,14 @@ fn main() {
 
                 if status.is_err() {
                     panic!("Error checking out origin for {}: {}", repo, status.unwrap_err());
+                }
+
+                let status = Command::new("git")
+                    .arg("pull")
+                    .status();
+
+                if status.is_err() {
+                    panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
                 }
 
                 let status = Command::new("git")
@@ -282,6 +282,14 @@ fn main() {
                     panic!("Error checking out branch {}: {}", &branch, status.unwrap_err());
                 }
             }
+        }
+
+        let status = Command::new("git")
+            .arg("pull")
+            .status();
+
+        if status.is_err() {
+            panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
         }
 
         match action.as_str() {
@@ -418,14 +426,6 @@ fn main() {
             panic!("Failed to change directory to {}: {}", repo, status.unwrap_err());
         }
 
-            let status = Command::new("git")
-                .arg("fetch")
-                .status();
-
-            if status.is_err() {
-                panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
-            }
-
         if action != "bupdate" {
             let status = Command::new("git")
                 .arg("checkout")
@@ -443,6 +443,14 @@ fn main() {
 
             if status.is_err() {
                 panic!("Error checking out origin for {}: {}", repo, status.unwrap_err());
+            }
+
+            let status = Command::new("git")
+                .arg("pull")
+                .status();
+
+            if status.is_err() {
+                panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
             }
 
             let status = Command::new("git")
@@ -465,6 +473,14 @@ fn main() {
             if status.is_err() {
                 panic!("Error pushing {} to upstream: {}", &branch, status.unwrap_err());
             }
+        }
+
+        let status = Command::new("git")
+            .arg("pull")
+            .status();
+
+        if status.is_err() {
+            panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
         }
 
         match action.as_str() {
@@ -700,14 +716,6 @@ fn main() {
             panic!("Failed to change directory to {}: {}", repo, status.unwrap_err());
         }
 
-        let status = Command::new("git")
-            .arg("fetch")
-            .status();
-
-        if status.is_err() {
-            panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
-        }
-
         if action != "bupdate" {
             let status = Command::new("git")
                 .arg("checkout")
@@ -725,6 +733,14 @@ fn main() {
 
             if status.is_err() {
                 panic!("Error checking out origin for {}: {}", repo, status.unwrap_err());
+            }
+
+            let status = Command::new("git")
+                .arg("pull")
+                .status();
+
+            if status.is_err() {
+                panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
             }
 
             let status = Command::new("git")
@@ -747,6 +763,14 @@ fn main() {
             if status.is_err() {
                 panic!("Error pushing {} to upstream: {}", &branch, status.unwrap_err());
             }
+        }
+
+        let status = Command::new("git")
+            .arg("pull")
+            .status();
+
+        if status.is_err() {
+            panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
         }
 
         match action.as_str() {
@@ -942,14 +966,6 @@ fn main() {
             panic!("Failed to change directory to {}: {}", repo, status.unwrap_err());
         }
 
-        let status = Command::new("git")
-            .arg("fetch")
-            .status();
-
-        if status.is_err() {
-            panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
-        }
-
         if repo != "jOS-Updates" {
             if action != "bupdate" {
                 let status = Command::new("git")
@@ -968,6 +984,14 @@ fn main() {
 
                 if status.is_err() {
                     panic!("Error checking out origin for {}: {}", repo, status.unwrap_err());
+                }
+
+                let status = Command::new("git")
+                    .arg("pull")
+                    .status();
+
+                if status.is_err() {
+                    panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
                 }
 
                 let status = Command::new("git")
@@ -1000,6 +1024,14 @@ fn main() {
             if status.is_err() {
                 panic!("Error checking out main for {}: {}", repo, status.unwrap_err());
             }
+        }
+
+        let status = Command::new("git")
+            .arg("pull")
+            .status();
+
+        if status.is_err() {
+            panic!("Error pulling changes for {}: {}", repo, status.unwrap_err());
         }
 
         match action.as_str() {
