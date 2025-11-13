@@ -10,7 +10,7 @@ fn main() {
     let action= args[1].clone();
     let mut tag_name = "";
 
-    if action == "update" || action == "default" || action == "init" || action == "bupdate" {
+    if action == "update" || action == "default" || action == "init" || action == "bupdate" || action == "null" {
         if env::var("IS_CI").unwrap_or("false".parse().unwrap()) == "true" && action != "init" {
             panic!("cannot use {} in ci, this is done to prevent the ci from destroying the source tree", action);
         }
