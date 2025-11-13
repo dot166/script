@@ -52,7 +52,6 @@ fn main() {
     ];
 
     let independent=[
-        "jOS_j-lib",
         "jOS-Updates",
     ];
 
@@ -967,7 +966,7 @@ fn main() {
             panic!("Failed to change directory to {}: {}", repo, status.unwrap_err());
         }
 
-        if repo != "jOS-Updates" && repo != "jOS_j-lib" {
+        if repo != "jOS-Updates" {
             if action != "bupdate" {
                 let status = Command::new("git")
                     .arg("checkout")
@@ -1037,20 +1036,18 @@ fn main() {
 
         match action.as_str() {
             "delete" => {
-                if repo != "jOS_j-lib" {
-                    let _ = Command::new("git")
-                        .arg("tag")
-                        .arg("-d")
-                        .arg(tag_name)
-                        .status();
+                let _ = Command::new("git")
+                    .arg("tag")
+                    .arg("-d")
+                    .arg(tag_name)
+                    .status();
 
-                    let _ = Command::new("git")
-                        .arg("push")
-                        .arg("origin")
-                        .arg("--delete")
-                        .arg(tag_name)
-                        .status();
-                }
+                let _ = Command::new("git")
+                    .arg("push")
+                    .arg("origin")
+                    .arg("--delete")
+                    .arg(tag_name)
+                    .status();
             },
             "release" => {
                 if repo == "jOS-Updates" {
@@ -1127,33 +1124,31 @@ fn main() {
                         panic!("Error creating release for {}: {}", repo, status.unwrap_err());
                     }
                 } else {
-                    if repo != "jOS_j-lib" {
-                        let status = Command::new("git")
-                            .arg("tag")
-                            .arg("-s")
-                            .arg(tag_name)
-                            .arg("-m")
-                            .arg(tag_name)
-                            .status();
+                    let status = Command::new("git")
+                        .arg("tag")
+                        .arg("-s")
+                        .arg(tag_name)
+                        .arg("-m")
+                        .arg(tag_name)
+                        .status();
 
-                        if status.is_err() {
-                            panic!("Error tagging {}: {}", repo, status.unwrap_err());
-                        }
+                    if status.is_err() {
+                        panic!("Error tagging {}: {}", repo, status.unwrap_err());
+                    }
 
-                        let status = Command::new("git")
-                            .arg("push")
-                            .arg("origin")
-                            .arg(tag_name)
-                            .status();
+                    let status = Command::new("git")
+                        .arg("push")
+                        .arg("origin")
+                        .arg(tag_name)
+                        .status();
 
-                        if status.is_err() {
-                            panic!("Error pushing tag {}: {}", repo, status.unwrap_err());
-                        }
+                    if status.is_err() {
+                        panic!("Error pushing tag {}: {}", repo, status.unwrap_err());
                     }
                 }
             },
             "default" => {
-                if repo != "jOS-Updates" && repo != "jOS_j-lib" {
+                if repo != "jOS-Updates" {
                     let status = Command::new("gh")
                         .arg("repo")
                         .arg("edit")
