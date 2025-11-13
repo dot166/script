@@ -84,7 +84,7 @@ fn main() {
         if action != "bupdate" {
             let status = Command::new("git")
                 .arg("checkout")
-                .arg(&branch)
+                .arg("origin/".to_string() + &branch)
                 .status();
 
             if status.is_err() {
@@ -275,7 +275,7 @@ fn main() {
             _ => {
                 let status = Command::new("git")
                     .arg("checkout")
-                    .arg(&branch)
+                    .arg("origin/".to_string() + &branch)
                     .status();
 
                 if status.is_err() {
@@ -429,7 +429,7 @@ fn main() {
         if action != "bupdate" {
             let status = Command::new("git")
                 .arg("checkout")
-                .arg(&branch)
+                .arg("origin/".to_string() + &branch)
                 .status();
 
             if status.is_err() {
@@ -711,7 +711,7 @@ fn main() {
         if action != "bupdate" {
             let status = Command::new("git")
                 .arg("checkout")
-                .arg(&branch)
+                .arg("origin/".to_string() + &branch)
                 .status();
 
             if status.is_err() {
@@ -954,7 +954,7 @@ fn main() {
             if action != "bupdate" {
                 let status = Command::new("git")
                     .arg("checkout")
-                    .arg(&branch)
+                    .arg("origin/".to_string() + &branch)
                     .status();
 
                 if status.is_err() {
@@ -994,7 +994,7 @@ fn main() {
         } else {
             let status = Command::new("git")
                 .arg("checkout")
-                .arg("main")
+                .arg("origin/main")
                 .status();
 
             if status.is_err() {
