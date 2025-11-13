@@ -1,5 +1,4 @@
 use j_lib_rust::android_util::*;
-use reqwest::blocking::get;
 use std::collections::HashMap;
 use std::env;
 use std::error::Error;
@@ -13,19 +12,21 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     let verbose;
-    if args.len() == 3 {
-        if args[2] != "-v" {
+    if args.len() == 2 {
+        if args[1] != "-v" {
             show_usage(&args);
         }
-        verbose = &args[2] == "-v";
+        verbose = &args[1] == "-v";
     } else {
-        if !args[1].starts_with("http") {
-            show_usage(&args);
-        }
         verbose = false;
     }
-    let emoji_url = &args[1];
-    let emoji_data = get(emoji_url)?.text()?;
+
+    let exe = env::current_exe().unwrap();
+    let current_dir = exe.parent().expect("Could not get current dir");
+    if verbose {
+        println!("{:?}", current_dir);
+    }
+    let emoji_data = fs::read_to_string(current_dir.join("source/emoji/emoji-test.txt"));
     let mut emoji_by_group = parse_emoji_test_grouped(&emoji_data);
     let group_to_array: HashMap<&str, &str> = HashMap::from([
         ("Smileys & Emotion", "emoji_eight_smiley_people"),
@@ -39,12 +40,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("Emoticons", "emoji_emoticons"),
         ("Smileys & Emotion - boring", "emoji_eight_smiley_people_boring")
     ]);
-
-    let exe = env::current_exe().unwrap();
-    let current_dir = exe.parent().expect("Could not get current dir");
-    if verbose {
-        println!("{:?}", current_dir);
-    }
     let relative_path = PathBuf::from("../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
     let target_path = current_dir.join(&relative_path);
     let template_path = current_dir.join("source/emoji/template.xml");
