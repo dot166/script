@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     if verbose {
         println!("{:?}", current_dir);
     }
-    let emoji_data = fs::read_to_string(current_dir.join("source/emoji/emoji-test.txt"));
+    let emoji_data = fs::read_to_string(current_dir.join("source/emoji/emoji-test.txt"))?;
     let mut emoji_by_group = parse_emoji_test_grouped(&emoji_data);
     let group_to_array: HashMap<&str, &str> = HashMap::from([
         ("Smileys & Emotion", "emoji_eight_smiley_people"),
