@@ -1,5 +1,4 @@
 use std::env;
-use std::process::Command;
 use lib_aosp::build;
 
 fn main() {
@@ -15,18 +14,4 @@ fn main() {
     let device = build::get_device((&args[1]).parse().unwrap());
 
     build::build_aosp(device, build_type);
-    
-    if args[1] == "sdk_phone64_x86_64" {
-        run_emulator()
-    }
-}
-
-fn run_emulator() {
-    Command::new("bash")
-        .arg("-c")
-        .arg("emulator")
-        .spawn()
-        .unwrap()
-        .wait_with_output()
-        .unwrap();
 }
