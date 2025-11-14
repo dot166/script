@@ -5,7 +5,7 @@ version = 4
 [[package]]
 name = "lib_aosp"
 version = "0.1.0"
-source = "git+https://github.com/dot166/lib_aosp#59346e1b80327b99f007ef336285cae15c55a398"
+source = "git+https://github.com/dot166/lib_aosp#c9839485e4e361c8b6497c538a4ea2ad8b324af9"
 
 [[package]]
 name = "update-checkout"
