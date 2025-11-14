@@ -4,4 +4,4 @@ version = "1.0.0"
 edition = "2024"
 
 [dependencies]
-j_lib_rust = { git = "https://github.com/dot166/jOS_j-Lib" }
+regex = "1.12.2"

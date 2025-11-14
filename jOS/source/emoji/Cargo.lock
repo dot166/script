@@ -15,14 +15,6 @@ dependencies = [
 name = "emoji"
 version = "1.0.0"
 dependencies = [
- "j_lib_rust",
-]
-
-[[package]]
-name = "j_lib_rust"
-version = "0.1.0"
-source = "git+https://github.com/dot166/jOS_j-Lib#d70971e52f3b52915ee3cc04cfbc063c2d6ac5ff"
-dependencies = [
  "regex",
 ]
 
