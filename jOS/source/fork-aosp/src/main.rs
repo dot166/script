@@ -1,8 +1,8 @@
+use lib_aosp::scripts;
 use std::env;
 use std::fs;
 use std::path::Path;
-use std::process::{Command, Stdio};
-use lib_aosp::scripts;
+use std::process::Command;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -21,7 +21,6 @@ fn main() {
     // Clone the repository
     Command::new("git")
         .args(["clone", &upstream, "-b", &aosp_tag])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to clone repository");
 
@@ -35,28 +34,24 @@ fn main() {
     // Checkout a new branch
     Command::new("git")
         .args(["checkout", "-b", &branch])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to checkout new branch");
 
     // Add upstream remote
     Command::new("git")
         .args(["remote", "add", "upstream", &upstream])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to add upstream remote");
 
     // Fetch upstream tags
     Command::new("git")
         .args(["fetch", "upstream", "--tags"])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to fetch upstream tags");
 
     // Remove origin remote
     Command::new("git")
         .args(["remote", "rm", "origin"])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to remove origin remote");
 
@@ -76,14 +71,12 @@ fn main() {
             "--disable-issues",
             "--disable-wiki",
         ])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to create GitHub repository");
 
     // Set default repository
     Command::new("gh")
         .args(["repo", "set-default", &repo_name])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to set default repository");
 
@@ -95,14 +88,12 @@ fn main() {
             "--enable-projects=false",
             "--enable-merge-commit=false",
         ])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to edit repository settings");
 
     // View repository on web
     Command::new("gh")
         .args(["repo", "view", "--web"])
-        .stdout(Stdio::piped())
         .status()
         .expect("Failed to view repository on web");
 }
