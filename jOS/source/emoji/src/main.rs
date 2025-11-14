@@ -7,7 +7,7 @@ use regex::Regex;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
-    if args.len() < 2 || args.len() > 3 {
+    if args.len() > 2 {
         show_usage(&args);
     }
 
