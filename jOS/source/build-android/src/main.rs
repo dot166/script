@@ -4,13 +4,9 @@ use lib_aosp::build;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
-    if args.len() == 2 {
-        args[2] = "user".parse().unwrap();
-    }
     if args.len() != 3 {
         println!("Usage: aosp-build [device] [build type]");
-        println!("build type is optional (default is user)");
-        panic!("Expected two or less command-line arguments");
+        panic!("Expected two command-line arguments");
     }
     let build_type = build::get_build_type((&args[2]).parse().unwrap());
     if args[1] == "emulator" {
