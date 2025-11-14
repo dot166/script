@@ -104,7 +104,7 @@ fn parse_emoji_test_grouped(data: &str) -> HashMap<String, Vec<String>> {
 }
 
 fn show_usage(args: &Vec<String>) {
-    eprintln!("Usage: {}  {{-v(Verbose)}}", args[0]);
+    eprintln!("Usage: {} {{-v(Verbose)}}", args[0]);
     std::process::exit(1);
 }
 
