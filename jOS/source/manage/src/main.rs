@@ -1051,7 +1051,7 @@ fn main() {
             },
             "release" => {
                 if repo == "jOS-Updates" {
-                    let release_dir = format!("../../jOS-{}/releases/{}/release-oriole-{}/", branch, tag_name, tag_name);
+                    let release_dir = format!("../../grapheneos/releases/{}/release-oriole-{}/", tag_name, tag_name);
                     let status = Command::new("cp")
                         .arg("-T")
                         .arg(format!("{}oriole-stable", release_dir))
