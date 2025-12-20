@@ -1,7 +1,0 @@
-[package]
-name = "fork-aosp"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-lib_aosp = { git = "https://github.com/dot166/lib_aosp" }

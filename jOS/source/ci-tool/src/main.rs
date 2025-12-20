@@ -23,7 +23,7 @@ pub fn get_script_dir() -> Option<PathBuf> {
 fn main() {
     unsafe { env::set_var("IS_CI", "true"); }
     env::set_current_dir(&get_script_dir().unwrap()).expect("Failed to change directory");
-    let scripts = ["build-android", "emoji", "fork-aosp", "manage", "update-checkout"];
+    let scripts = ["build-android", "emoji", "manage", "update-checkout"];
     for script in scripts.iter() {
         println!("Building {}", script);
         env::set_current_dir(&Path::new(script)).unwrap();
