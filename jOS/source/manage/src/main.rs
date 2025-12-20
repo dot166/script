@@ -374,7 +374,7 @@ fn main() {
                     panic!("Error fetching upstream tags: {}", status.unwrap_err());
                 }
 
-                if repo == "jOS_manifest" {
+                if repo == "platform_manifest" {
                     let status = Command::new("git")
                         .arg("rebase")
                         .arg("--onto")
@@ -462,11 +462,7 @@ fn main() {
         }
 
         if action == "init" {
-            let remote_url = if repo == "jOS_manifest" {
-                "https://github.com/grapheneos/platform_manifest"
-            } else {
-                &format!("https://github.com/grapheneos/{}", repo)
-            };
+            let remote_url = &format!("https://github.com/grapheneos/{}", repo);
 
             let status = Command::new("git")
                 .arg("remote")
