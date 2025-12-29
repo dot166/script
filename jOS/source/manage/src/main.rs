@@ -298,7 +298,7 @@ fn main() {
                     .status();
             },
             "release" => {
-                if repo == "jOS_manifest" {
+                if repo == "platform_manifest" {
                     let status = Command::new("git")
                         .arg("checkout")
                         .arg("-B")
