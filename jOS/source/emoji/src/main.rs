@@ -1,9 +1,23 @@
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::env;
 use std::error::Error;
 use std::fs::{self};
 use std::path::PathBuf;
 use regex::Regex;
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+struct KaomojiRoot {
+    name: String,
+    categories: Vec<KaomojiCategory>,
+}
+
+#[derive(Debug, Deserialize)]
+struct KaomojiCategory {
+    name: String,
+    emoticons: Vec<String>,
+}
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
@@ -38,7 +52,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("Symbols", "emoji_eight_symbols"),
         ("Flags", "emoji_eight_flags"),
         ("Emoticons", "emoji_emoticons"),
-        ("Smileys & Emotion - boring", "emoji_eight_smiley_people_boring")
+        ("Smileys & Emotion - boring", "emoji_eight_smiley_people_boring"),
+        ("Kaomojis", "emoji_kaomojis")
     ]);
     let relative_path = PathBuf::from("../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
     let target_path = current_dir.join(&relative_path);
@@ -48,6 +63,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     for line in fs::read_to_string(current_dir.join("source/emoji/emoticons"))?.lines() {
         emoji_by_group.entry("Emoticons".parse().unwrap()).or_default().push(line.parse().unwrap());
     }
+    
+    let kaomoji_json_path = current_dir.join("source/emoji/kaomojis.json");
+    let kaomoji_data = fs::read_to_string(kaomoji_json_path)?;
+    let kaomojis = parse_kaomojis_json(&kaomoji_data)?;
+
+    let kaomojis = dedup_preserve_order(kaomojis);
+
+    emoji_by_group.entry("Kaomojis".to_string()).or_default().extend(kaomojis);
 
     let mut updated = template_content.clone();
     for (group, items) in emoji_by_group {
@@ -70,6 +93,12 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("Successfully updated emoji xml files");
     Ok(())
+}
+
+fn dedup_preserve_order(mut items: Vec<String>) -> Vec<String> {
+    let mut seen = HashSet::new();
+    items.retain(|item| seen.insert(item.clone()));
+    items
 }
 
 /// Parses emoji-test.txt into group → Vec<emoji>
@@ -103,9 +132,33 @@ fn parse_emoji_test_grouped(data: &str) -> HashMap<String, Vec<String>> {
     emoji_map
 }
 
+fn parse_kaomojis_json(data: &str) -> Result<Vec<String>, Box<dyn Error>> {
+    let roots: Vec<KaomojiRoot> = serde_json::from_str(data)?;
+
+    let mut result = Vec::new();
+
+    for root in roots {
+        for category in root.categories {
+            for emoticon in category.emoticons {
+                result.push(emoticon);
+            }
+        }
+    }
+
+    Ok(result)
+}
+
 fn show_usage(args: &Vec<String>) {
     eprintln!("Usage: {} {{-v(Verbose)}}", args[0]);
     std::process::exit(1);
+}
+
+fn escape_xml(s: &str) -> String {
+    s.replace('&', "&amp;")
+     .replace('<', "&lt;")
+     .replace('>', "&gt;")
+     .replace("\\", "\\\\")
+     .replace('\'', "\\'")
 }
 
 pub fn update_android_array(content: &str, array_name: &str, items: &[String], verbose: bool) -> String {
@@ -118,7 +171,10 @@ pub fn update_android_array(content: &str, array_name: &str, items: &[String], v
 
     let items_str = items
         .iter()
-        .map(|item| format!("        <item>{}</item>", item))
+        .map(|item| {
+            let escaped = escape_xml(item);
+            format!("        <item>{}</item>", escaped)
+        })
         .collect::<Vec<_>>()
         .join("\n");
 
