@@ -846,35 +846,15 @@ fn main() {
             },
             "release" => {
                 if repo == "jOS-Updates" {
-                    let release_dir = format!("../../grapheneos/releases/{}/release-oriole-{}/", tag_name, tag_name);
+                    let release_dir = format!("../../grapheneos/releases/{}/release-felix-{}/", tag_name, tag_name);
                     let status = Command::new("cp")
                         .arg("-T")
-                        .arg(format!("{}oriole-stable", release_dir))
-                        .arg("oriole-stable")
+                        .arg(format!("{}felix-stable", release_dir))
+                        .arg("felix-stable")
                         .status();
 
                     if status.is_err() {
                         panic!("Error copying stable release for {}: {}", repo, status.unwrap_err());
-                    }
-
-                    let status = Command::new("cp")
-                        .arg("-T")
-                        .arg(format!("{}oriole-beta", release_dir))
-                        .arg("oriole-beta")
-                        .status();
-
-                    if status.is_err() {
-                        panic!("Error copying beta release for {}: {}", repo, status.unwrap_err());
-                    }
-
-                    let status = Command::new("cp")
-                        .arg("-T")
-                        .arg(format!("{}oriole-alpha", release_dir))
-                        .arg("oriole-alpha")
-                        .status();
-
-                    if status.is_err() {
-                        panic!("Error copying alpha release for {}: {}", repo, status.unwrap_err());
                     }
 
                     let status = Command::new("git")
@@ -909,10 +889,10 @@ fn main() {
                         .arg("create")
                         .arg(tag_name)
                         .arg("--latest=true")
-                        .arg("--notes")
-                        .arg("i keep forgetting to write changelogs")
-                        .arg(format!("{}oriole-ota_update-{}.zip", release_dir, tag_name))
-                        .arg(format!("{}oriole-install-{}.zip", release_dir, tag_name))
+                        .arg("--notes-file")
+                        .arg("./release-notes.txt")
+                        .arg(format!("{}felix-ota_update-{}.zip", release_dir, tag_name))
+                        .arg(format!("{}felix-install-{}.zip", release_dir, tag_name))
                         .status();
 
                     if status.is_err() {
