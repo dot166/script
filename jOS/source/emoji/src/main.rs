@@ -53,7 +53,43 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("Flags", "emoji_eight_flags"),
         ("Emoticons", "emoji_emoticons"),
         ("Smileys & Emotion - boring", "emoji_eight_smiley_people_boring"),
-        ("Kaomojis", "emoji_kaomojis")
+        ("KaomojisJoy", "emoji_kaomojis_joy"),
+        ("KaomojisLove", "emoji_kaomojis_love"),
+        ("KaomojisEmbarrassment", "emoji_kaomojis_embarrassment"),
+        ("KaomojisSympathy", "emoji_kaomojis_sympathy"),
+        ("KaomojisDissatisfaction", "emoji_kaomojis_dissatisfaction"),
+        ("KaomojisAnger", "emoji_kaomojis_anger"),
+        ("KaomojisSadness", "emoji_kaomojis_sadness"),
+        ("KaomojisPain", "emoji_kaomojis_pain"),
+        ("KaomojisFear", "emoji_kaomojis_fear"),
+        ("KaomojisIndifference", "emoji_kaomojis_indifference"),
+        ("KaomojisConfusion", "emoji_kaomojis_confusion"),
+        ("KaomojisDoubt", "emoji_kaomojis_doubt"),
+        ("KaomojisSurprise", "emoji_kaomojis_surprise"),
+        ("KaomojisGreeting", "emoji_kaomojis_greeting"),
+        ("KaomojisHugging", "emoji_kaomojis_hugging"),
+        ("KaomojisWinking", "emoji_kaomojis_winking"),
+        ("KaomojisApologizing", "emoji_kaomojis_apologizing"),
+        ("KaomojisNosebleeding", "emoji_kaomojis_nosebleeding"),
+        ("KaomojisHiding", "emoji_kaomojis_hiding"),
+        ("KaomojisWriting", "emoji_kaomojis_writing"),
+        ("KaomojisRunning", "emoji_kaomojis_running"),
+        ("KaomojisSleeping", "emoji_kaomojis_sleeping"),
+        ("KaomojisCat", "emoji_kaomojis_cat"),
+        ("KaomojisBear", "emoji_kaomojis_bear"),
+        ("KaomojisDog", "emoji_kaomojis_dog"),
+        ("KaomojisRabbit", "emoji_kaomojis_rabbit"),
+        ("KaomojisPig", "emoji_kaomojis_pig"),
+        ("KaomojisBird", "emoji_kaomojis_bird"),
+        ("KaomojisSpider", "emoji_kaomojis_spider"),
+        ("KaomojisFriends", "emoji_kaomojis_friends"),
+        ("KaomojisEnemies", "emoji_kaomojis_enemies"),
+        ("KaomojisMagic", "emoji_kaomojis_magic"),
+        ("KaomojisFood", "emoji_kaomojis_food"),
+        ("KaomojisMusic", "emoji_kaomojis_music"),
+        ("KaomojisGames", "emoji_kaomojis_games"),
+        ("KaomojisFaces", "emoji_kaomojis_faces"),
+        ("KaomojisSpecial", "emoji_kaomojis_special")
     ]);
     let relative_path = PathBuf::from("../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
     let target_path = current_dir.join(&relative_path);
@@ -70,7 +106,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let kaomojis = dedup_preserve_order(kaomojis);
 
-    emoji_by_group.entry("Kaomojis".to_string()).or_default().extend(kaomojis);
+    emoji_by_group.extend(kaomojis);
 
     let mut updated = template_content.clone();
     for (group, items) in emoji_by_group {
@@ -87,10 +123,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn dedup_preserve_order(mut items: Vec<String>) -> Vec<String> {
-    let mut seen = HashSet::new();
-    items.retain(|item| seen.insert(item.clone()));
-    items
+fn dedup_preserve_order(mut map: HashMap<String, Vec<String>>) -> HashMap<String, Vec<String>> { 
+    for items in map.values_mut() {
+        let mut seen = HashSet::new();
+        items.retain(|item| seen.insert(item.clone()));
+    }
+    map
 }
 
 /// Parses emoji-test.txt into group → Vec<emoji>
@@ -124,15 +162,15 @@ fn parse_emoji_test_grouped(data: &str) -> HashMap<String, Vec<String>> {
     emoji_map
 }
 
-fn parse_kaomojis_json(data: &str) -> Result<Vec<String>, Box<dyn Error>> {
+fn parse_kaomojis_json(data: &str) -> Result<HashMap<String, Vec<String>>, Box<dyn Error>> {
     let roots: Vec<KaomojiRoot> = serde_json::from_str(data)?;
 
-    let mut result = Vec::new();
+    let mut result: HashMap<String, Vec<String>> = HashMap::new();
 
     for root in roots {
         for category in root.categories {
             for emoticon in category.emoticons {
-                result.push(emoticon);
+                result.entry("Kaomojis".to_owned() + &category.name).or_default().push(emoticon);
             }
         }
     }
