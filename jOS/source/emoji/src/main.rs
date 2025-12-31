@@ -89,7 +89,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     fs::write(target_path, &updated)?;
-    fs::write(template_path, &updated)?; // update template
 
     println!("Successfully updated emoji xml files");
     Ok(())
