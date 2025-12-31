@@ -75,17 +75,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut updated = template_content.clone();
     for (group, items) in emoji_by_group {
         if let Some(array_name) = group_to_array.get(group.as_str()) {
-            if verbose {
-                println!("{}", array_name);
-            }
             updated = update_android_array(&updated, array_name, &items, verbose);
         } else {
             eprintln!("Skipping group '{}': no array name mapping.", group);
         }
-    }
-
-    if verbose {
-        println!("{}", &updated);
     }
 
     fs::write(target_path, &updated)?;
@@ -187,7 +180,7 @@ pub fn update_android_array(content: &str, array_name: &str, items: &[String], v
         array_name, items_str
     );
     if verbose {
-        println!("{}", replacement);
+        println!("changed lines in {} = {}", array_name, replacement.lines().count());
     }
 
     array_re.replace(&updated, replacement).to_string()
