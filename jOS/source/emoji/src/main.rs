@@ -1,3 +1,4 @@
+use reqwest::blocking::get;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::env;
@@ -21,26 +22,25 @@ struct KaomojiCategory {
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
-    if args.len() > 2 {
+    if args.len() < 2 || args.len() > 3 {
         show_usage(&args);
     }
 
     let verbose;
-    if args.len() == 2 {
-        if args[1] != "-v" {
+    if args.len() == 3 {
+        if args[2] != "-v" {
             show_usage(&args);
         }
-        verbose = &args[1] == "-v";
+        verbose = &args[2] == "-v";
     } else {
+        if !args[1].starts_with("http") {
+            show_usage(&args);
+        }
         verbose = false;
     }
 
-    let exe = env::current_exe().unwrap();
-    let current_dir = exe.parent().expect("Could not get current dir");
-    if verbose {
-        println!("{:?}", current_dir);
-    }
-    let emoji_data = fs::read_to_string(current_dir.join("source/emoji/emoji-test.txt"))?;
+    let emoji_url = &args[1];
+    let emoji_data = get(emoji_url)?.text()?;
     let mut emoji_by_group = parse_emoji_test_grouped(&emoji_data);
     let group_to_array: HashMap<&str, &str> = HashMap::from([
         ("Smileys & Emotion", "emoji_eight_smiley_people"),
@@ -91,6 +91,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("KaomojisFaces", "emoji_kaomojis_faces"),
         ("KaomojisSpecial", "emoji_kaomojis_special")
     ]);
+
+    let exe = env::current_exe().unwrap();
+    let current_dir = exe.parent().expect("Could not get current dir");
+    if verbose {
+        println!("{:?}", current_dir);
+    }
     let relative_path = PathBuf::from("../../platform_packages_inputmethods_LatinIME/java/res/values-v19/emoji-categories.xml");
     let target_path = current_dir.join(&relative_path);
     let template_path = current_dir.join("source/emoji/template.xml");
@@ -179,7 +185,7 @@ fn parse_kaomojis_json(data: &str) -> Result<HashMap<String, Vec<String>>, Box<d
 }
 
 fn show_usage(args: &Vec<String>) {
-    eprintln!("Usage: {} {{-v(Verbose)}}", args[0]);
+    eprintln!("Usage: {} [url|https://unicode.org/Public/emoji/16.0/emoji-test.txt] {{-v(Verbose)}}", args[0]);
     std::process::exit(1);
 }
 
