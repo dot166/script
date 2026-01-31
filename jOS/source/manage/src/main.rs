@@ -24,7 +24,7 @@ fn main() {
     } else {
         panic!("unrecognized action");
     }
-    let aosp_forks: [&str; 0]=[
+    let aosp_forks=[
         "platform_packages_apps_Music"
     ];
 
