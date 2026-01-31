@@ -25,6 +25,7 @@ fn main() {
         panic!("unrecognized action");
     }
     let aosp_forks: [&str; 0]=[
+        "platform_packages_apps_Music"
     ];
 
     let grapheneos_forks=[
